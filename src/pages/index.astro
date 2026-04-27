@@ -1,17 +1,189 @@
 ---
+import { getProjets, getCategories, imageUrl } from '../lib/directus.js';
 
+const url = new URL(Astro.request.url);
+const catSlug = url.searchParams.get('cat') || null;
+
+const [projetsRaw, categories] = await Promise.all([getProjets(catSlug), getCategories()]);
+
+const getSpan = (poids) => {
+  const p = Number(poids);
+  if (p >= 4) return 8;
+  if (p === 3) return 6;
+  if (p === 2) return 4;
+  return 3;
+};
+
+const colSpan = (poids) => `span-${getSpan(poids)}`;
+
+const PALETTE = ['#1CC9FE', '#0D667F', '#7D8893'];
+let _ci = 0;
+const makeTile = (span) => ({ _tile: true, color: PALETTE[_ci++ % PALETTE.length], _span: span });
+const itemSpanClass = (item) => item._tile ? `span-${item._span}` : colSpan(item.poids);
+
+function findInWindow(pool, targetSpan, lookahead) {
+  const limit = Math.min(lookahead, pool.length);
+  for (let j = 0; j < limit; j++) {
+    if (getSpan(pool[j].poids) === targetSpan) return j;
+  }
+  return -1;
+}
+
+function mosaicLayout(items, lookahead = 8) {
+  const pool = [...items];
+  const result = [];
+  let blockCount = 0;
+  let gapStreak = 0; // rangées consécutives terminées par une tuile de gap
+
+  while (pool.length > 0) {
+    blockCount++;
+    const firstSpan = getSpan(pool[0].poids);
+
+    if (firstSpan === 8) {
+      // Bloc 2-rangées : span-8 + deux span-4 à droite (ou tuile couleur si aucun dispo).
+      result.push(pool.shift());
+      for (let side = 0; side < 2; side++) {
+        const idx = findInWindow(pool, 4, lookahead);
+        result.push(idx !== -1 ? pool.splice(idx, 1)[0] : makeTile(4));
+      }
+      gapStreak = 0;
+    } else {
+      // Rangée normale de 12 colonnes.
+      let rowSpace = 12;
+
+      // Rupture de rythme : toutes les 5 rangées, à-plat span-2 en début de ligne.
+      if (blockCount % 5 === 0) {
+        result.push(makeTile(2));
+        rowSpace -= 2;
+        gapStreak = 0;
+      }
+
+      const rowStart = result.length;
+      while (rowSpace > 0 && pool.length > 0) {
+        const limit = Math.min(lookahead, pool.length);
+        let picked = false;
+        for (let j = 0; j < limit; j++) {
+          const s = getSpan(pool[j].poids);
+          // Ne jamais placer un span-8 en milieu de rangée (décalé de la colonne 1).
+          if (s <= rowSpace && !(s === 8 && rowSpace < 12)) {
+            const [item] = pool.splice(j, 1);
+            result.push(item);
+            rowSpace -= s;
+            picked = true;
+            break;
+          }
+        }
+        if (!picked) break;
+      }
+
+      // Tuile de gap : max 1 rangée consécutive pour éviter les colonnes de couleur.
+      if ((rowSpace === 1 || rowSpace === 2) && gapStreak < 1) {
+        result.push(makeTile(rowSpace));
+        gapStreak++;
+      } else {
+        gapStreak = 0;
+      }
+
+      if (result.length === rowStart) result.push(pool.shift());
+    }
+  }
+
+  return result;
+}
+
+const projets = mosaicLayout(projetsRaw);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1·2·7·8 réalisation(s)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav>
+  <div class="logo">1<span class="accent">·</span>2<span class="accent">·</span>7<span class="accent">·</span>8 <span class="logo-sub">réalisation(s)</span></div>
+  <div class="links">
+    <a href="/" class="active">Portfolio</a>
+    <a href="/flashback">Flashback</a>
+    <a href="/contact">Contact</a>
+    <a href="/en">EN</a>
+  </div>
+</nav>
+
+<div class="filters">
+  <a href="/" class={!catSlug ? 'active' : ''}>Tout afficher</a>
+  {categories.map(cat => (
+    <a href={`/?cat=${cat.slug}`} class={catSlug === cat.slug ? 'active' : ''}>{cat.nom}</a>
+  ))}
+</div>
+
+<div class="grid">
+  {projets.map(item => item._tile ? (
+    <div class={`item tile ${itemSpanClass(item)}`} style={`background: ${item.color};`}></div>
+  ) : (
+    <div class={`item ${itemSpanClass(item)}`}>
+      {item.image_vignette && (
+        <img
+          src={imageUrl(item.image_vignette.id, 800)}
+          alt={item.titre}
+          loading="lazy"
+        />
+      )}
+      <div class="overlay">
+        <div class="info">
+          <div class="titre">{item.titre}</div>
+          <div class="meta">{item.annee}{item.diffusion ? ` · ${item.diffusion}` : ''}</div>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+
+<footer>
+  <span>1·2·7·8 réalisation(s)</span>
+  <span>contact@1-2-7-8.tv · +33 (0)6 44 66 33 00</span>
+</footer>
+
+</body>
 </html>
+
+<style is:global>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a0a0a; color: #e8e8e0; font-family: 'Barlow Condensed', sans-serif; }
+
+  nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 0.5px solid rgba(13,102,127,0.35); }
+  .logo { font-size: 14px; font-weight: 700; letter-spacing: .08em; }
+  .logo .accent { color: #1CC9FE; }
+  .logo-sub { font-weight: 400; color: #7D8893; }
+  nav .links { display: flex; gap: 20px; }
+  nav a { font-size: 11px; color: #7D8893; text-decoration: none; letter-spacing: .1em; }
+  nav a.active { color: #1CC9FE; }
+
+  .filters { display: flex; gap: 6px; padding: 12px 24px; border-bottom: 0.5px solid rgba(255,255,255,0.05); flex-wrap: wrap; }
+  .filters a { font-size: 10px; padding: 4px 10px; border: 0.5px solid #6D6E71; color: #7D8893; text-decoration: none; letter-spacing: .08em; }
+  .filters a.active { background: rgba(28,201,254,0.08); color: #1CC9FE; border-color: rgba(28,201,254,0.4); }
+
+  .grid { display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: calc(100vw * 9 / 48); gap: 2px; padding: 2px; }
+  .item { position: relative; overflow: hidden; cursor: pointer; background: #181818; }
+  .span-8 { grid-column: span 8; grid-row: span 2; }
+  .span-6 { grid-column: span 6; }
+  .span-4 { grid-column: span 4; }
+  .span-3 { grid-column: span 3; }
+  .span-2 { grid-column: span 2; }
+  .span-1 { grid-column: span 1; }
+  .item img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .item .overlay { position: absolute; inset: 0; background: rgba(0,0,0,0); transition: background .2s; display: flex; flex-direction: column; justify-content: flex-end; padding: 10px; }
+  .item:hover .overlay { background: rgba(0,0,0,0.65); }
+  .item .info { opacity: 0; transform: translateY(4px); transition: all .15s; }
+  .item:hover .info { opacity: 1; transform: translateY(0); }
+  .item .titre { font-size: 12px; font-weight: 700; color: #fff; }
+  .item .meta { font-size: 9px; color: #7D8893; margin-top: 3px; }
+
+  footer { background: #0D667F; padding: 10px 24px; display: flex; justify-content: space-between; }
+  footer span { font-size: 10px; color: rgba(255,255,255,0.7); }
+</style>
