@@ -8,6 +8,7 @@ export async function getStaticPaths() {
 
 const { slug } = Astro.params;
 const projet = await getProjet(slug);
+const base = import.meta.env.BASE_URL;
 
 if (!projet) return Astro.redirect('/');
 
@@ -20,28 +21,28 @@ const getImageId = (img) => img?.directus_files_id?.id || img?.id || null;
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{projet.titre} · 1·2·7·8 réalisation(s)</title>
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml">
+  <link rel="icon" href={`${base}favicon.ico`} sizes="any">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <nav>
-  <a href="/" class="logo">
-    <img src="/logo.png" class="logo-mark" alt="1·2·7·8 réalisation(s)" onerror="this.style.display='none';this.parentElement.querySelector('.logo-fallback').style.display='flex'">
+  <a href={base} class="logo">
+    <img src={`${base}logo.png`} class="logo-mark" alt="1·2·7·8 réalisation(s)" onerror="this.style.display='none';this.parentElement.querySelector('.logo-fallback').style.display='flex'">
     <span class="logo-fallback" style="display:none"><span class="logo-text">1<span class="accent">·</span>2<span class="accent">·</span>7<span class="accent">·</span>8</span><span class="logo-sub"> réalisation(s)</span></span>
   </a>
   <div class="links">
-    <a href="/">Portfolio</a>
-    <a href="/flashback">Flashback</a>
-    <a href="/contact">Contact</a>
-    <a href="/en">EN</a>
+    <a href={base}>Portfolio</a>
+    <a href={`${base}flashback`}>Flashback</a>
+    <a href={`${base}contact`}>Contact</a>
+    <a href={`${base}en`}>EN</a>
   </div>
 </nav>
 
 <div class="projet-header">
-  <a href="/" class="back">&larr; Portfolio</a>
+  <a href={base} class="back">&larr; Portfolio</a>
   <div class="projet-info">
     <h1>{projet.titre}</h1>
     <div class="meta-line">
@@ -131,4 +132,18 @@ const getImageId = (img) => img?.directus_files_id?.id || img?.id || null;
 
   footer { background: #0D667F; padding: 10px 24px; display: flex; justify-content: space-between; }
   footer span { font-size: 10px; color: rgba(255,255,255,0.7); }
+
+  @media (max-width: 640px) {
+    nav { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
+    nav .links { gap: 14px; }
+
+    .projet-header { flex-direction: column; gap: 12px; padding: 16px 16px 0; }
+    h1 { font-size: 28px; }
+
+    .hero { height: 56vw; margin-top: 12px; }
+
+    .description { padding: 20px 16px; font-size: 15px; }
+
+    .gallery { grid-template-columns: 1fr; }
+  }
 </style>
