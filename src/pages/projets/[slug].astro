@@ -1,0 +1,134 @@
+---
+import { getProjets, getProjet, imageUrl } from '../../lib/directus.js';
+
+export async function getStaticPaths() {
+  const projets = await getProjets();
+  return projets.map(p => ({ params: { slug: p.slug } }));
+}
+
+const { slug } = Astro.params;
+const projet = await getProjet(slug);
+
+if (!projet) return Astro.redirect('/');
+
+const getImageId = (img) => img?.directus_files_id?.id || img?.id || null;
+---
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{projet.titre} · 1·2·7·8 réalisation(s)</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">
+    <img src="/logo.png" class="logo-mark" alt="1·2·7·8 réalisation(s)" onerror="this.style.display='none';this.parentElement.querySelector('.logo-fallback').style.display='flex'">
+    <span class="logo-fallback" style="display:none"><span class="logo-text">1<span class="accent">·</span>2<span class="accent">·</span>7<span class="accent">·</span>8</span><span class="logo-sub"> réalisation(s)</span></span>
+  </a>
+  <div class="links">
+    <a href="/">Portfolio</a>
+    <a href="/flashback">Flashback</a>
+    <a href="/contact">Contact</a>
+    <a href="/en">EN</a>
+  </div>
+</nav>
+
+<div class="projet-header">
+  <a href="/" class="back">&larr; Portfolio</a>
+  <div class="projet-info">
+    <h1>{projet.titre}</h1>
+    <div class="meta-line">
+      {projet.annee && <span>{projet.annee}</span>}
+      {projet.diffusion && <><span class="sep">·</span><span>{projet.diffusion}</span></>}
+      {projet.production && <><span class="sep">·</span><span>{projet.production}</span></>}
+    </div>
+    {projet.categories && projet.categories.length > 0 && (
+      <div class="badges">
+        {projet.categories.map(c => {
+          const cat = c.portfolio_categories_id;
+          return cat ? (
+            <span class="badge" style={`color:${cat.couleur || '#7D8893'};border-color:${cat.couleur || '#7D8893'}`}>{cat.nom}</span>
+          ) : null;
+        })}
+      </div>
+    )}
+  </div>
+</div>
+
+{projet.image_vignette && (
+  <div class="hero">
+    <img src={imageUrl(projet.image_vignette.id, 1920)} alt={projet.titre} />
+  </div>
+)}
+
+{projet.description && (
+  <div class="description" set:html={projet.description} />
+)}
+
+{projet.images && projet.images.length > 0 && (
+  <div class="gallery">
+    {projet.images.map(img => {
+      const fileId = getImageId(img);
+      return fileId ? (
+        <img src={imageUrl(fileId, 1200)} alt="" loading="lazy" />
+      ) : null;
+    })}
+  </div>
+)}
+
+<footer>
+  <span>1·2·7·8 réalisation(s)</span>
+  <span>contact@1-2-7-8.tv · +33 (0)6 44 66 33 00</span>
+</footer>
+
+</body>
+</html>
+
+<style is:global>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a0a0a; color: #e8e8e0; font-family: 'Barlow Condensed', sans-serif; }
+
+  @font-face {
+    font-family: 'Stenciletta';
+    src: url('/fonts/Stenciletta.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 0.5px solid rgba(13,102,127,0.35); }
+  .logo { font-size: 14px; font-weight: 700; letter-spacing: .08em; text-decoration: none; color: inherit; display: flex; align-items: center; gap: 8px; }
+  .logo-mark { height: 28px; width: auto; }
+  .logo-text { font-family: 'Stenciletta', 'Barlow Condensed', sans-serif; }
+  .logo .accent { color: #1CC9FE; }
+  .logo-sub { font-weight: 400; color: #7D8893; }
+  nav .links { display: flex; gap: 20px; }
+  nav a { font-size: 11px; color: #7D8893; text-decoration: none; letter-spacing: .1em; }
+
+  .projet-header { padding: 24px 24px 0; display: flex; gap: 32px; align-items: flex-start; }
+  .back { font-size: 11px; color: #7D8893; text-decoration: none; letter-spacing: .1em; padding-top: 6px; white-space: nowrap; transition: color .15s; }
+  .back:hover { color: #1CC9FE; }
+
+  h1 { font-size: 42px; font-weight: 700; letter-spacing: .02em; line-height: 1; }
+  .meta-line { font-size: 12px; color: #7D8893; margin-top: 10px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .meta-line .sep { color: #1CC9FE; }
+  .badges { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+  .badge { font-size: 10px; padding: 4px 10px; border: 1px solid; letter-spacing: .08em; }
+
+  .hero { width: 100%; height: 70vh; overflow: hidden; margin-top: 20px; }
+  .hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .description { padding: 32px 24px; max-width: 720px; font-size: 16px; line-height: 1.65; }
+
+  .gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 5px; padding-bottom: 20px; }
+  .gallery img { width: 100%; display: block; object-fit: cover; }
+
+  footer { background: #0D667F; padding: 10px 24px; display: flex; justify-content: space-between; }
+  footer span { font-size: 10px; color: rgba(255,255,255,0.7); }
+</style>

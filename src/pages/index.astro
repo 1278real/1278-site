@@ -135,13 +135,18 @@ const projets = mosaicLayout(projetsRaw);
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>1·2·7·8 réalisation(s)</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <nav>
-  <div class="logo">1<span class="accent">·</span>2<span class="accent">·</span>7<span class="accent">·</span>8 <span class="logo-sub">réalisation(s)</span></div>
+  <a href="/" class="logo">
+    <img src="/logo.png" class="logo-mark" alt="1·2·7·8 réalisation(s)" onerror="this.style.display='none';this.parentElement.querySelector('.logo-fallback').style.display='flex'">
+    <span class="logo-fallback" style="display:none"><span class="logo-text">1<span class="accent">·</span>2<span class="accent">·</span>7<span class="accent">·</span>8</span><span class="logo-sub"> réalisation(s)</span></span>
+  </a>
   <div class="links">
     <a href="/" class="active">Portfolio</a>
     <a href="/flashback">Flashback</a>
@@ -161,7 +166,8 @@ const projets = mosaicLayout(projetsRaw);
   {projets.map(item => item._tile ? (
     <div class={`item tile server-tile ${itemSpanClass(item)}`} style={`background: ${item.color};${item._row2 ? ' grid-row: span 2;' : ''}`}></div>
   ) : (
-    <div
+    <a
+      href={`/projets/${item.slug}`}
       class={`item ${itemSpanClass(item)}`}
       data-poids={item.poids}
       data-cats={item.categories?.map(c => c.portfolio_categories_id?.slug).filter(Boolean).join(',')}
@@ -180,7 +186,7 @@ const projets = mosaicLayout(projetsRaw);
           <div class="meta">{item.annee}{item.diffusion ? ` · ${item.diffusion}` : ''}</div>
         </div>
       </div>
-    </div>
+    </a>
   ))}
 </div>
 
@@ -500,8 +506,17 @@ const projets = mosaicLayout(projetsRaw);
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: #0a0a0a; color: #e8e8e0; font-family: 'Barlow Condensed', sans-serif; }
 
+  @font-face {
+    font-family: 'Stenciletta';
+    src: url('/fonts/Stenciletta.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+  }
+
   nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 0.5px solid rgba(13,102,127,0.35); }
-  .logo { font-size: 14px; font-weight: 700; letter-spacing: .08em; }
+  .logo { font-size: 14px; font-weight: 700; letter-spacing: .08em; text-decoration: none; color: inherit; display: flex; align-items: center; gap: 8px; }
+  .logo-mark { height: 28px; width: auto; }
+  .logo-text { font-family: 'Stenciletta', 'Barlow Condensed', sans-serif; }
   .logo .accent { color: #1CC9FE; }
   .logo-sub { font-weight: 400; color: #7D8893; }
   nav .links { display: flex; gap: 20px; }
@@ -515,7 +530,7 @@ const projets = mosaicLayout(projetsRaw);
   .item.hidden { display: none; }
 
   .grid { display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: calc(100vw * 9 / 48); gap: 5px; padding: 5px; }
-  .item { position: relative; overflow: hidden; cursor: pointer; background: #181818; border-radius: 10px; }
+  .item { position: relative; overflow: hidden; cursor: pointer; background: #181818; border-radius: 10px; text-decoration: none; color: inherit; }
   .span-8 { grid-column: span 8; grid-row: span 2; }
   .span-6 { grid-column: span 6; }
   .span-4 { grid-column: span 4; }
