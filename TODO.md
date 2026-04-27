@@ -19,7 +19,7 @@
 
 ## Quand tu es prêt à basculer live
 
-- [ ] Supprimer `base: '/aZeRtYuIoP/test'` dans `astro.config.mjs`
+- [ ] Supprimer `base: '/aZeRtYuIoP/test/'` dans `astro.config.mjs`
 - [ ] Changer le secret GitHub `FTP_PATH` de `/aZeRtYuIoP/test/` à `/`
 - [ ] Vérifier que le token PAT dans le Flow Directus est le nouveau (scope repo + workflow)
 
