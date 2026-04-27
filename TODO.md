@@ -11,7 +11,6 @@
 - [ ] Page Flashback — galerie archives, filtre par décennie
 
 ## Chantiers (> 3h)
-- [ ] Webhook Directus → rebuild automatique (Netlify/Vercel)
 - [ ] Bilinguisme FR/EN — routing + champs `titre_en` / `description_en`
 - [ ] Transitions de page — View Transitions API Astro (index ↔ projet)
 
