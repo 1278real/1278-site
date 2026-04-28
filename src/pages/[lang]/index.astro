@@ -153,18 +153,18 @@ const yearGroups = [...yearMap.keys()]
   .sort((a, b) => b - a)
   .map(yr => ({ annee: yr, items: mosaicLayout(yearMap.get(yr)) }));
 
-const sortedCategories = [...categories].sort((a, b) => {
-  if (a.slug === 'selection') return -1;
-  if (b.slug === 'selection') return 1;
-  return 0;
-});
+const selectionCat = categories.find(c => c.slug === 'selection');
+const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => a.nom.localeCompare(b.nom));
 ---
 
 <BaseLayout lang={lang} title="1·2·7·8 réalisation(s)" activePage="portfolio">
 
 <div class="filters">
+  {selectionCat && (
+    <a href="#" data-cat="selection">{t.categories['selection'] || selectionCat.nom}</a>
+  )}
   <a href="#" data-cat="" class="active">{t.portfolio.showAll}</a>
-  {sortedCategories.map(cat => (
+  {otherCats.map(cat => (
     <a href="#" data-cat={cat.slug}>{t.categories[cat.slug] || cat.nom}</a>
   ))}
 </div>
@@ -564,8 +564,10 @@ const sortedCategories = [...categories].sort((a, b) => {
   .portfolio-wrapper { flex: 1; display: flex; flex-direction: column; }
   .year-block { display: flex; flex-direction: column; }
 
-  .filters { display: flex; gap: 6px; padding: 12px 24px; border-bottom: 0.5px solid rgba(255,255,255,0.05); flex-wrap: wrap; }
+  .filters { display: flex; gap: 6px; padding: 12px 24px; border-bottom: 0.5px solid rgba(255,255,255,0.05); flex-wrap: wrap; align-items: center; }
   .filters a { font-size: 10px; padding: 4px 10px; border: 0.5px solid #6D6E71; color: #7D8893; text-decoration: none; letter-spacing: .08em; }
+  .filters a[data-cat="selection"] { color: #D4A843; border-color: #D4A843; margin-right: 10px; }
+  .filters a[data-cat="selection"].active { background: rgba(212,168,67,0.12); color: #D4A843; border-color: #D4A843; }
   .filters a[data-cat=""] { color: #e8e8e0; border-color: rgba(255,255,255,0.3); margin-right: 6px; }
   .filters a.active { background: rgba(28,201,254,0.08); color: #1CC9FE; border-color: rgba(28,201,254,0.4); }
 
