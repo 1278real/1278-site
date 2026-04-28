@@ -236,6 +236,8 @@ const yearGroups = [...yearMap.keys()]
   <span>contact@1-2-7-8.tv · +33 (0)6 44 66 33 00</span>
 </footer>
 
+<button id="back-top" aria-label="Retour en haut">↑</button>
+
 <script is:inline define:vars={{ BASE: import.meta.env.BASE_URL }}>
 (function () {
 
@@ -538,6 +540,16 @@ const yearGroups = [...yearMap.keys()]
   });
 
 })();
+
+(function() {
+  var btn = document.getElementById('back-top');
+  window.addEventListener('scroll', function() {
+    btn.classList.toggle('visible', window.scrollY > 500);
+  }, { passive: true });
+  btn.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
 </script>
 
 </body>
@@ -601,6 +613,9 @@ const yearGroups = [...yearMap.keys()]
     .item .info { opacity: 1; transform: none; }
   }
 
+  #back-top { position: fixed; bottom: 24px; right: 16px; width: 40px; height: 40px; background: #1CC9FE; color: #0a0a0a; border: none; border-radius: 50%; font-size: 20px; line-height: 1; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 200; display: flex; align-items: center; justify-content: center; }
+  #back-top.visible { opacity: 1; pointer-events: auto; }
+
   @media (max-width: 640px) {
     nav { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
     nav .links { gap: 14px; }
@@ -610,13 +625,17 @@ const yearGroups = [...yearMap.keys()]
     .year-sep { padding: 5px 9px; gap: 10px; }
     .year-label { font-size: 28px; }
 
-    .grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 45vw; gap: 3px; padding: 3px; }
-    .span-8 { grid-column: span 2; grid-row: span 1; }
+    /* Tuiles masquées : inutiles sur 2 colonnes, source de blocs colorés parasites */
+    .tile { display: none; }
+
+    .grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 45vw; grid-auto-flow: row dense; gap: 3px; padding: 3px; }
+    /* Forcer grid-row: span 1 sur tous les items (écrase les inline styles _row2) */
+    .item { grid-row: span 1 !important; border-radius: 6px; }
+    .span-8 { grid-column: span 2; }
     .span-6 { grid-column: span 2; }
     .span-4 { grid-column: span 1; }
     .span-3 { grid-column: span 1; }
     .span-2 { grid-column: span 1; }
-    .item { border-radius: 6px; }
     .item .titre { font-size: 13px; }
     .item .meta { font-size: 10px; }
 
