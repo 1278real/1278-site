@@ -127,18 +127,24 @@ function mosaicLayout(items, lookahead = 8) {
   return result;
 }
 
-const years = [...new Set(
-  projetsRaw.map(p => p.annee).filter(Boolean).map(Number)
-)].sort((a, b) => b - a);
+const layoutResult = mosaicLayout(projetsRaw);
 
+// Injecte un séparateur d'année au début de chaque rangée quand l'année change
 const projets = [];
-years.forEach(annee => {
-  const group = projetsRaw.filter(p => Number(p.annee) === annee);
-  projets.push({ _separator: true, annee });
-  projets.push(...mosaicLayout(group));
-});
-const noYear = projetsRaw.filter(p => !p.annee);
-if (noYear.length) projets.push(...mosaicLayout(noYear));
+let rowPos = 0;
+let currentYear = null;
+for (const item of layoutResult) {
+  const span = item._tile ? item._span : (item._heroSpan || getSpan(item.poids));
+  if (!item._tile && rowPos === 0) {
+    const yr = Number(item.annee);
+    if (yr !== currentYear) {
+      projets.push({ _separator: true, annee: yr });
+      currentYear = yr;
+    }
+  }
+  projets.push(item);
+  rowPos = (rowPos + span) % 12;
+}
 ---
 
 <!DOCTYPE html>
@@ -570,9 +576,9 @@ if (noYear.length) projets.push(...mosaicLayout(noYear));
 
   .year-sep { grid-column: 1 / -1; display: flex; align-items: center; gap: 20px; padding: 28px 4px 12px; border-top: 0.5px solid rgba(28,201,254,0.2); overflow: hidden; }
   .year-label { font-size: 28px; font-weight: 700; font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; color: #1CC9FE; letter-spacing: .04em; flex-shrink: 0; }
-  .sep-clients { overflow: hidden; flex: 1; }
-  .sep-track { display: flex; gap: 36px; align-items: center; width: max-content; animation: scroll-clients 28s linear infinite; }
-  .sep-track img { height: 20px; width: auto; opacity: 0.5; transition: opacity .2s; }
+  .sep-clients { overflow: hidden; flex: 1; mask-image: linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent); }
+  .sep-track { display: flex; gap: 36px; align-items: center; width: max-content; animation: scroll-clients 28s linear infinite; will-change: transform; }
+  .sep-track img { height: 20px; width: auto; max-width: 100px; min-width: 30px; opacity: 0.5; transition: opacity .2s; flex-shrink: 0; }
   .sep-track img:hover { opacity: 0.9; }
   @keyframes scroll-clients { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
