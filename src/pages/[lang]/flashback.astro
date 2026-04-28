@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { languages, ui } from '../../lib/i18n';
+import type { Lang } from '../../lib/i18n';
+
+export function getStaticPaths() {
+  return languages.map(lang => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const t = ui[lang];
+---
+
+<BaseLayout lang={lang} title={`Flashback · 1·2·7·8 réalisation(s)`} activePage="flashback">
+
+<div class="page-header">
+  <h1>Flashback</h1>
+  <p class="subtitle">{t.flashback.subtitle}</p>
+</div>
+
+<div class="timeline">
+  {t.flashback.timeline.map((entry, i) => (
+    <div class={`entry ${i % 2 === 0 ? 'left' : 'right'}`}>
+      <div class="entry-content">
+        <span class="annee">{entry.annee}</span>
+        <h2>{entry.titre}</h2>
+        <p set:html={entry.texte} />
+      </div>
+      <div class="dot"></div>
+    </div>
+  ))}
+</div>
+
+</BaseLayout>
+
+<style is:global>
+  .page-header { padding: 48px 24px 0; text-align: center; }
+  .page-header h1 { font-size: 56px; font-weight: 700; font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; letter-spacing: .04em; }
+  .subtitle { font-size: 13px; color: #7D8893; margin-top: 8px; letter-spacing: .08em; }
+
+  .timeline { flex: 1; position: relative; max-width: 900px; margin: 60px auto; padding: 0 24px 60px; width: 100%; }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0; bottom: 0;
+    width: 0.5px;
+    background: linear-gradient(to bottom, transparent, rgba(28,201,254,0.3) 10%, rgba(28,201,254,0.3) 90%, transparent);
+    transform: translateX(-50%);
+  }
+
+  .entry { display: flex; align-items: flex-start; position: relative; margin-bottom: 60px; }
+  .entry.left { flex-direction: row-reverse; }
+  .entry.right { flex-direction: row; }
+
+  .entry-content {
+    width: calc(50% - 28px);
+    background: rgba(255,255,255,0.03);
+    border: 0.5px solid rgba(255,255,255,0.08);
+    padding: 20px 24px;
+  }
+  .entry.left .entry-content { margin-right: 28px; text-align: right; }
+  .entry.right .entry-content { margin-left: 28px; }
+
+  .annee { font-size: 11px; color: #1CC9FE; letter-spacing: .12em; font-weight: 700; }
+  .entry-content h2 { font-size: 22px; font-weight: 700; font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; margin-top: 4px; letter-spacing: .04em; line-height: 1.1; }
+  .entry-content p { font-size: 14px; color: #7D8893; margin-top: 10px; line-height: 1.6; }
+  .entry-content p em { color: #e8e8e0; font-style: normal; }
+
+  .dot {
+    position: absolute;
+    left: 50%;
+    top: 20px;
+    width: 10px; height: 10px;
+    background: #1CC9FE;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 640px) {
+    .page-header { padding: 32px 16px 0; }
+    .page-header h1 { font-size: 36px; }
+
+    .timeline { padding: 0 16px 40px; margin-top: 40px; }
+    .timeline::before { left: 16px; }
+
+    .entry.left, .entry.right { flex-direction: row; }
+    .entry-content { width: calc(100% - 44px); margin-left: 44px !important; margin-right: 0 !important; text-align: left !important; }
+    .dot { left: 16px; top: 20px; }
+  }
+</style>

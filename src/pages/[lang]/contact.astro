@@ -1,33 +1,17 @@
 ---
-const base = import.meta.env.BASE_URL;
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { languages, ui } from '../../lib/i18n';
+import type { Lang } from '../../lib/i18n';
+
+export function getStaticPaths() {
+  return languages.map(lang => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const t = ui[lang];
 ---
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact · 1·2·7·8 réalisation(s)</title>
-  <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml">
-  <link rel="icon" href={`${base}favicon.ico`} sizes="any">
-  <link rel="stylesheet" href="https://use.typekit.net/deq5imu.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&display=swap" rel="stylesheet">
-</head>
-<body>
-
-<nav>
-  <a href={base} class="logo">
-    <img src={`${base}logo.png`} class="logo-mark" alt="1·2·7·8 réalisation(s)" onerror="this.style.display='none';this.parentElement.querySelector('.logo-fallback').style.display='flex'">
-    <span class="logo-fallback" style="display:none"><span class="logo-text">1<span class="accent">·</span>2<span class="accent">·</span>7<span class="accent">·</span>8</span><span class="logo-sub"> réalisation(s)</span></span>
-  </a>
-  <div class="links">
-    <a href={base}>Portfolio</a>
-    <a href={`${base}flashback`}>Flashback</a>
-    <a href={`${base}contact`} class="active">Contact</a>
-    <a href={`${base}en`}>EN</a>
-  </div>
-</nav>
+<BaseLayout lang={lang} title={`Contact · 1·2·7·8 réalisation(s)`} activePage="contact">
 
 <main>
   <div class="contact-layout">
@@ -42,11 +26,11 @@ const base = import.meta.env.BASE_URL;
     <div class="links-col">
       <div class="contact-lines">
         <a href="tel:+33644663300" class="contact-line">
-          <span class="label">Téléphone</span>
+          <span class="label">{t.contact.phone}</span>
           <span class="value">+33 (0) 6 44 66 33 00</span>
         </a>
         <div class="contact-line contact-emails">
-          <span class="label">Email</span>
+          <span class="label">{t.contact.email}</span>
           <a href="mailto:contact@1-2-7-8.tv" class="value">contact@1-2-7-8.tv</a>
           <a href="mailto:alexis@1-2-7-8.tv" class="value value-secondary">alexis@1-2-7-8.tv</a>
         </div>
@@ -66,39 +50,18 @@ const base = import.meta.env.BASE_URL;
   </div>
 </main>
 
-<footer>
-  <span>1·2·7·8 réalisation(s)</span>
-  <span>contact@1-2-7-8.tv · +33 (0) 6 44 66 33 00</span>
-</footer>
-
-</body>
-</html>
+</BaseLayout>
 
 <style is:global>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #0a0a0a; color: #e8e8e0; font-family: 'Barlow Condensed', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
-
-  nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 0.5px solid rgba(13,102,127,0.35); }
-  .logo { font-size: 14px; font-weight: 700; letter-spacing: .08em; text-decoration: none; color: inherit; display: flex; align-items: center; gap: 8px; }
-  .logo-mark { height: 28px; width: auto; }
-  .logo-text { font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; }
-  .logo .accent { color: #1CC9FE; }
-  .logo-sub { font-weight: 400; color: #7D8893; }
-  nav .links { display: flex; gap: 20px; }
-  nav a { font-size: 11px; color: #7D8893; text-decoration: none; letter-spacing: .1em; font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; }
-  nav a.active { color: #1CC9FE; }
-
   main { flex: 1; padding: 48px 24px; display: flex; align-items: flex-start; }
 
   .contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; width: 100%; align-items: start; }
 
-  /* Titre double stenciletta */
   .title-col { display: flex; align-items: flex-start; padding-top: 4px; }
   .page-title { position: relative; line-height: 0.9; }
   .title-left  { display: block; font-family: 'stenciletta-left',  'Barlow Condensed', sans-serif; font-size: clamp(72px, 10vw, 140px); font-weight: 700; letter-spacing: .02em; color: #1CC9FE; }
   .title-right { display: block; font-family: 'stenciletta-right', 'Barlow Condensed', sans-serif; font-size: clamp(72px, 10vw, 140px); font-weight: 700; letter-spacing: .02em; color: #7D8893; position: absolute; top: 0; left: 0; }
 
-  /* Liens */
   .links-col { display: flex; flex-direction: column; gap: 0; }
   .contact-lines { display: flex; flex-direction: column; }
   .contact-line { display: flex; flex-direction: column; gap: 5px; padding: 14px 0 14px 12px; border-bottom: 0.5px solid rgba(255,255,255,0.07); border-left: 2px solid transparent; text-decoration: none; color: inherit; transition: color .15s, border-color .15s; }
@@ -114,20 +77,13 @@ const base = import.meta.env.BASE_URL;
 
   .legal { margin-top: 32px; font-size: 10px; color: #333; line-height: 1.7; padding-left: 12px; }
 
-  footer { background: #0D667F; padding: 10px 24px; display: flex; justify-content: space-between; }
-  footer span { font-size: 10px; color: rgba(255,255,255,0.7); }
-
   @media (max-width: 768px) {
     .contact-layout { grid-template-columns: 1fr; gap: 32px; }
     .title-left, .title-right { font-size: clamp(56px, 18vw, 96px); }
   }
 
   @media (max-width: 640px) {
-    nav { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
-    nav .links { gap: 14px; }
-    .logo-sub { display: none; }
     main { padding: 32px 16px; }
     .value { font-size: 20px; }
-    footer { flex-direction: column; gap: 4px; }
   }
 </style>

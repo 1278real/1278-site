@@ -1,0 +1,77 @@
+export const languages = ['fr', 'en'] as const;
+export type Lang = typeof languages[number];
+
+export const ui = {
+  fr: {
+    nav: { portfolio: 'Portfolio', flashback: 'Flashback', contact: 'Contact', lang: 'EN' },
+    portfolio: { showAll: 'Tout afficher' },
+    projet: { back: '← Portfolio' },
+    contact: { phone: 'Téléphone', email: 'Email' },
+    flashback: {
+      subtitle: 'Avant de créer 1·2·7·8 réalisation(s)…',
+      timeline: [
+        {
+          annee: '2000',
+          titre: 'Diplômé 3IS',
+          texte: 'Spécialité montage & effets visuels. Débuts en tant que monteur sur <em>Tout le monde en parle</em>, <em>Paris Dernière</em>, <em>Le Soldat Rose</em>…',
+        },
+        {
+          annee: '2005',
+          titre: 'Création FADE IN',
+          texte: "Société d'habillage TV et graphismes. Truquiste sur <em>Ça se discute</em>, <em>Miss France</em>, <em>Roland Garros</em>, le Festival de Cannes, la Ligue 1, le Top 14 et la Coupe du Monde de la FIFA.",
+        },
+        {
+          annee: '2010',
+          titre: 'Réalisateur',
+          texte: 'Mise en place et réalisation, plateaux et extérieurs, talk et sports. Un credo : mettre à profit les connaissances techniques acquises & les collaborations passées pour servir les projets actuels.',
+        },
+        {
+          annee: '2016',
+          titre: 'Création 27|28 réalisation(s)',
+          texte: 'Structure dédiée à la réalisation TV & au développement iOS / Android.',
+        },
+        {
+          annee: '2019',
+          titre: '1·2·7·8 réalisation(s)',
+          texte: "Fade In & 27|28 réalisation(s) fusionnent. La structure unique porte désormais l'ensemble des activités : réalisation TV, mise en place artistique et développement applicatif.",
+        },
+      ],
+    },
+  },
+  en: {
+    nav: { portfolio: 'Portfolio', flashback: 'Flashback', contact: 'Contact', lang: 'FR' },
+    portfolio: { showAll: 'Show all' },
+    projet: { back: '← Portfolio' },
+    contact: { phone: 'Phone', email: 'Email' },
+    flashback: {
+      subtitle: 'Before creating 1·2·7·8 réalisation(s)…',
+      timeline: [
+        {
+          annee: '2000',
+          titre: '3IS Graduate',
+          texte: 'Editing & visual effects major. Started as an editor on <em>Tout le monde en parle</em>, <em>Paris Dernière</em>, <em>Le Soldat Rose</em>…',
+        },
+        {
+          annee: '2005',
+          titre: 'FADE IN Founded',
+          texte: 'TV dressing & graphics company. Visual effects artist on <em>Ça se discute</em>, <em>Miss France</em>, <em>Roland Garros</em>, Cannes Film Festival, Ligue 1, Top 14 and the FIFA World Cup.',
+        },
+        {
+          annee: '2010',
+          titre: 'Director',
+          texte: 'Live and location directing — talk shows, sports, studio productions. One motto: leveraging technical expertise & past collaborations to serve present projects.',
+        },
+        {
+          annee: '2016',
+          titre: '27|28 réalisation(s) Founded',
+          texte: 'Dedicated to TV directing & iOS / Android development.',
+        },
+        {
+          annee: '2019',
+          titre: '1·2·7·8 réalisation(s)',
+          texte: 'Fade In & 27|28 réalisation(s) merge. The unified company now encompasses all activities: TV directing, artistic production design and app development.',
+        },
+      ],
+    },
+  },
+};

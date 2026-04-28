@@ -1,16 +1,25 @@
 ---
-import { getProjets, getProjet, imageUrl } from '../../lib/directus.js';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { languages, ui } from '../../../lib/i18n';
+import type { Lang } from '../../../lib/i18n';
+import { getProjets, getProjet, imageUrl } from '../../../lib/directus.js';
 
 export async function getStaticPaths() {
   const projets = await getProjets();
-  return projets.map(p => ({ params: { slug: p.slug } }));
+  return languages.flatMap(lang =>
+    projets.map(p => ({ params: { lang, slug: p.slug } }))
+  );
 }
 
-const { slug } = Astro.params;
+const { lang, slug } = Astro.params as { lang: Lang; slug: string };
+const t = ui[lang];
 const projet = await getProjet(slug);
 const base = import.meta.env.BASE_URL;
 
-if (!projet) return Astro.redirect('/');
+if (!projet) return Astro.redirect(`${base}${lang}/`);
+
+const titre = lang === 'en' && projet.titre_en ? projet.titre_en : projet.titre;
+const description = lang === 'en' && projet.description_en ? projet.description_en : projet.description;
 
 const getImageId = (img) => img?.directus_files_id?.id || img?.directus_files_id || img?.id || null;
 
@@ -22,41 +31,18 @@ const getYoutubeId = (url: string) => {
 const youtubeId = getYoutubeId(projet.url_youtube);
 ---
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{projet.titre} · 1·2·7·8 réalisation(s)</title>
-  <meta property="og:title" content={`${projet.titre} · 1·2·7·8 réalisation(s)`}>
-  <meta property="og:type" content="article">
-  {projet.image_vignette && <meta property="og:image" content={imageUrl(projet.image_vignette.id, 1200)}>}
-  {projet.description && <meta property="og:description" content={projet.description.replace(/<[^>]*>/g, '').slice(0, 200)}>}
-  <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml">
-  <link rel="icon" href={`${base}favicon.ico`} sizes="any">
-  <link rel="stylesheet" href="https://use.typekit.net/deq5imu.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&display=swap" rel="stylesheet">
-</head>
-<body>
-
-<nav>
-  <a href={base} class="logo">
-    <img src={`${base}logo.png`} class="logo-mark" alt="1·2·7·8 réalisation(s)" onerror="this.style.display='none';this.parentElement.querySelector('.logo-fallback').style.display='flex'">
-    <span class="logo-fallback" style="display:none"><span class="logo-text">1<span class="accent">·</span>2<span class="accent">·</span>7<span class="accent">·</span>8</span><span class="logo-sub"> réalisation(s)</span></span>
-  </a>
-  <div class="links">
-    <a href={base} class="active">Portfolio</a>
-    <a href={`${base}flashback`}>Flashback</a>
-    <a href={`${base}contact`}>Contact</a>
-    <a href={`${base}en`}>EN</a>
-  </div>
-</nav>
+<BaseLayout
+  lang={lang}
+  title={`${titre} · 1·2·7·8 réalisation(s)`}
+  activePage="portfolio"
+  ogImage={projet.image_vignette ? imageUrl(projet.image_vignette.id, 1200) : undefined}
+  ogDescription={description ? description.replace(/<[^>]*>/g, '').slice(0, 200) : undefined}
+>
 
 <div class="projet-header">
-  <a href={base} class="back">&larr; Portfolio</a>
+  <a href={`${base}${lang}/`} class="back">{t.projet.back}</a>
   <div class="projet-info">
-    <h1>{projet.titre}</h1>
+    <h1>{titre}</h1>
     <div class="meta-line">
       {projet.annee && <span>{projet.annee}</span>}
       {projet.diffusion && <><span class="sep">·</span><span>{projet.diffusion}</span></>}
@@ -77,12 +63,12 @@ const youtubeId = getYoutubeId(projet.url_youtube);
 
 {projet.image_vignette && (
   <div class="hero">
-    <img src={imageUrl(projet.image_vignette.id, 1920)} alt={projet.titre} />
+    <img src={imageUrl(projet.image_vignette.id, 1920)} alt={titre} />
   </div>
 )}
 
-{projet.description && (
-  <div class="description" set:html={projet.description} />
+{description && (
+  <div class="description" set:html={description} />
 )}
 
 {(youtubeId || (projet.images && projet.images.length > 0)) && (
@@ -91,7 +77,7 @@ const youtubeId = getYoutubeId(projet.url_youtube);
       <div class="gallery-video">
         <iframe
           src={`https://www.youtube-nocookie.com/embed/${youtubeId}`}
-          title={projet.titre}
+          title={titre}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
           loading="lazy"
@@ -107,28 +93,9 @@ const youtubeId = getYoutubeId(projet.url_youtube);
   </div>
 )}
 
-<footer>
-  <span>1·2·7·8 réalisation(s)</span>
-  <span>contact@1-2-7-8.tv · +33 (0)6 44 66 33 00</span>
-</footer>
-
-</body>
-</html>
+</BaseLayout>
 
 <style is:global>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #0a0a0a; color: #e8e8e0; font-family: 'Barlow Condensed', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
-
-  nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 0.5px solid rgba(13,102,127,0.35); }
-  .logo { font-size: 14px; font-weight: 700; letter-spacing: .08em; text-decoration: none; color: inherit; display: flex; align-items: center; gap: 8px; }
-  .logo-mark { height: 28px; width: auto; }
-  .logo-text { font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; }
-  .logo .accent { color: #1CC9FE; }
-  .logo-sub { font-weight: 400; color: #7D8893; }
-  nav .links { display: flex; gap: 20px; }
-  nav a { font-size: 11px; color: #7D8893; text-decoration: none; letter-spacing: .1em; font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; }
-  nav a.active { color: #1CC9FE; }
-
   .projet-header { padding: 24px 24px 0; display: flex; gap: 32px; align-items: flex-start; }
   .back { font-size: 11px; color: #7D8893; text-decoration: none; letter-spacing: .1em; padding-top: 6px; white-space: nowrap; transition: color .15s; }
   .back:hover { color: #1CC9FE; }
@@ -149,23 +116,11 @@ const youtubeId = getYoutubeId(projet.url_youtube);
   .gallery-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
   .gallery img { width: 100%; display: block; object-fit: cover; }
 
-  footer { background: #0D667F; padding: 10px 24px; display: flex; justify-content: space-between; margin-top: auto; }
-  footer span { font-size: 10px; color: rgba(255,255,255,0.7); }
-
   @media (max-width: 640px) {
-    nav { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
-    nav .links { gap: 14px; }
-    .logo-sub { display: none; }
-
     .projet-header { flex-direction: column; gap: 12px; padding: 16px 16px 0; }
     h1 { font-size: 28px; }
-
     .hero { height: 56vw; margin-top: 12px; }
-
     .description { padding: 20px 16px; font-size: 15px; }
-
     .gallery { grid-template-columns: 1fr; }
-
-    footer { flex-direction: column; gap: 4px; }
   }
 </style>
