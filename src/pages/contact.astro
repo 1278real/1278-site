@@ -45,14 +45,11 @@ const base = import.meta.env.BASE_URL;
           <span class="label">Téléphone</span>
           <span class="value">+33 (0) 6 44 66 33 00</span>
         </a>
-        <a href="mailto:contact@1-2-7-8.tv" class="contact-line">
+        <div class="contact-line contact-emails">
           <span class="label">Email</span>
-          <span class="value">contact@1-2-7-8.tv</span>
-        </a>
-        <a href="mailto:alexis@1-2-7-8.tv" class="contact-line">
-          <span class="label">&nbsp;</span>
-          <span class="value">alexis@1-2-7-8.tv</span>
-        </a>
+          <a href="mailto:contact@1-2-7-8.tv" class="value">contact@1-2-7-8.tv</a>
+          <a href="mailto:alexis@1-2-7-8.tv" class="value">alexis@1-2-7-8.tv</a>
+        </div>
         <a href="https://bsky.app/profile/1-2-7-8.pro" target="_blank" rel="noopener" class="contact-line">
           <span class="label">Bluesky</span>
           <span class="value">@1-2-7-8.pro</span>
@@ -109,6 +106,10 @@ const base = import.meta.env.BASE_URL;
   .contact-line:hover { color: #1CC9FE; border-left-color: #1CC9FE; }
   .label { font-size: 9px; letter-spacing: .16em; color: #7D8893; text-transform: uppercase; }
   .value { font-size: 24px; font-weight: 700; letter-spacing: .01em; }
+  .contact-emails { cursor: default; }
+  .contact-emails:hover { color: inherit; border-left-color: transparent; }
+  .contact-emails .value { text-decoration: none; color: inherit; transition: color .15s; display: block; }
+  .contact-emails .value:hover { color: #1CC9FE; }
 
   .legal { margin-top: 32px; font-size: 10px; color: #333; line-height: 1.7; padding-left: 12px; }
 
