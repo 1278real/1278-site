@@ -41,5 +41,5 @@ export async function getClients() {
 }
 
 export function imageUrl(fileId, width = 800) {
-  return `https://api-gthp.1-2-7-8.solutions/assets/${fileId}?width=${width}&fit=cover&quality=85&access_token=odPOs8HSIMTJ9n-SPdAwitfvP0pHe4mE`;
+  return `https://api-gthp.1-2-7-8.solutions/assets/${fileId}?width=${width}&fit=cover&quality=85`;
 }
