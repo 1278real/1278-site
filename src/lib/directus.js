@@ -31,6 +31,15 @@ export async function getCategories() {
   }));
 }
 
+export async function getClients() {
+  return directus.request(readItems('portfolio_clients', {
+    filter: { actif: { _eq: true } },
+    sort: ['-ordre'],
+    fields: ['nom', 'logo'],
+    limit: 100,
+  }));
+}
+
 export function imageUrl(fileId, width = 800) {
   return `https://api-gthp.1-2-7-8.solutions/assets/${fileId}?width=${width}&fit=cover&quality=85&access_token=odPOs8HSIMTJ9n-SPdAwitfvP0pHe4mE`;
 }

@@ -1,7 +1,7 @@
 ---
-import { getProjets, getCategories, imageUrl } from '../lib/directus.js';
+import { getProjets, getCategories, getClients, imageUrl } from '../lib/directus.js';
 
-const [projetsRaw, categories] = await Promise.all([getProjets(), getCategories()]);
+const [projetsRaw, categories, clients] = await Promise.all([getProjets(), getCategories(), getClients()]);
 const base = import.meta.env.BASE_URL;
 
 const getSpan = (poids) => {
@@ -191,6 +191,18 @@ const projets = mosaicLayout(projetsRaw);
     </a>
   ))}
 </div>
+
+{clients && clients.length > 0 && (
+  <div class="clients-band">
+    <div class="clients-track">
+      {[...clients, ...clients].map((c) => (
+        c.logo
+          ? <img src={imageUrl(c.logo, 200)} alt={c.nom} title={c.nom} />
+          : <span class="client-name">{c.nom}</span>
+      ))}
+    </div>
+  </div>
+)}
 
 <footer>
   <span>1·2·7·8 réalisation(s)</span>
@@ -541,6 +553,13 @@ const projets = mosaicLayout(projetsRaw);
   .item:hover .info { opacity: 1; transform: translateY(0); }
   .item .titre { font-size: 16px; font-weight: 700; color: #fff; font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; }
   .item .meta { font-size: 11px; color: #7D8893; margin-top: 4px; }
+
+  .clients-band { overflow: hidden; border-top: 0.5px solid rgba(255,255,255,0.06); border-bottom: 0.5px solid rgba(255,255,255,0.06); padding: 16px 0; background: #0a0a0a; }
+  .clients-track { display: flex; gap: 48px; align-items: center; width: max-content; animation: scroll-clients 30s linear infinite; }
+  .clients-track img { height: 28px; width: auto; filter: brightness(0) invert(1); opacity: 0.4; transition: opacity .2s; }
+  .clients-track img:hover { opacity: 0.9; }
+  .client-name { font-size: 11px; color: #7D8893; letter-spacing: .1em; white-space: nowrap; }
+  @keyframes scroll-clients { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
   footer { background: #0D667F; padding: 10px 24px; display: flex; justify-content: space-between; }
   footer span { font-size: 10px; color: rgba(255,255,255,0.7); }
