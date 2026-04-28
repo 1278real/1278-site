@@ -127,34 +127,16 @@ function mosaicLayout(items, lookahead = 8) {
   return result;
 }
 
-const layoutResult = mosaicLayout(projetsRaw);
-
-// Injecte les séparateurs d'année au début des rangées CSS.
-// Le bloc span-8 normal [span-8 + comp-4 + comp-4] couvre 2 rangées :
-// le compteur postSpan8 compense le décalage (16%12=4 au lieu de 0).
-const projets = [];
-let rowPos = 0;
-let currentYear = null;
-let postSpan8 = 0;
-for (const item of layoutResult) {
-  const span = item._tile ? item._span : (item._heroSpan || getSpan(item.poids));
-  if (!item._tile && rowPos === 0) {
-    const yr = Number(item.annee);
-    if (yr !== currentYear) {
-      projets.push({ _separator: true, annee: yr });
-      currentYear = yr;
-    }
-  }
-  projets.push(item);
-  if (!item._tile && span === 8 && rowPos === 0) {
-    rowPos = 8; postSpan8 = 2;
-  } else if (postSpan8 > 0) {
-    postSpan8--;
-    if (postSpan8 === 0) rowPos = 0;
-  } else {
-    rowPos = (rowPos + span) % 12;
-  }
+// Grouper par année, mosaïque indépendante par année.
+const yearMap = new Map();
+for (const p of projetsRaw) {
+  const yr = Number(p.annee);
+  if (!yearMap.has(yr)) yearMap.set(yr, []);
+  yearMap.get(yr).push(p);
 }
+const yearGroups = [...yearMap.keys()]
+  .sort((a, b) => b - a)
+  .map(yr => ({ annee: yr, items: mosaicLayout(yearMap.get(yr)) }));
 ---
 
 <!DOCTYPE html>
@@ -191,49 +173,50 @@ for (const item of layoutResult) {
   ))}
 </div>
 
-<div class="grid">
-  {projets.map(item => item._separator ? (
-    <div class="year-sep">
-      <div class="year-label">
-        <span class="year-left">{item.annee}</span>
-        <span class="year-right">{item.annee}</span>
-      </div>
-      {clients && clients.length > 0 && (
-        <div class="sep-clients">
-          <div class="sep-track">
-            {[...clients, ...clients].map((c) => (
-              c.logo
-                ? <img src={imageUrl(c.logo, 120)} alt={c.nom} title={c.nom} />
-                : <span>{c.nom}</span>
-            ))}
+<div class="portfolio-wrapper">
+  {yearGroups.map(group => (
+    <div class="year-block" data-annee={group.annee}>
+      <div class="year-sep">
+        <div class="year-label">
+          <span class="year-left">{group.annee}</span>
+          <span class="year-right">{group.annee}</span>
+        </div>
+        {clients && clients.length > 0 && (
+          <div class="sep-clients">
+            <div class="sep-track">
+              {[...clients, ...clients].map((c) => (
+                c.logo
+                  ? <img src={imageUrl(c.logo, 120)} alt={c.nom} title={c.nom} />
+                  : <span>{c.nom}</span>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
-    </div>
-  ) : item._tile ? (
-    <div class={`item tile server-tile ${itemSpanClass(item)}`} style={`background: ${item.color};${item._row2 ? ' grid-row: span 2;' : ''}`}></div>
-  ) : (
-    <a
-      href={`${base}projets/${item.slug}`}
-      class={`item ${itemSpanClass(item)}`}
-      data-poids={item.poids}
-      data-cats={item.categories?.map(c => c.portfolio_categories_id?.slug).filter(Boolean).join(',')}
-      style={item._heroRow2 ? 'grid-row: span 2' : undefined}
-    >
-      {item.image_vignette && (
-        <img
-          src={imageUrl(item.image_vignette.id, 800)}
-          alt={item.titre}
-          loading="lazy"
-        />
-      )}
-      <div class="overlay">
-        <div class="info">
-          <div class="titre">{item.titre}</div>
-          <div class="meta">{item.annee}{item.diffusion ? ` · ${item.diffusion}` : ''}</div>
-        </div>
+        )}
       </div>
-    </a>
+      <div class="grid">
+        {group.items.map(item => item._tile ? (
+          <div class={`item tile server-tile ${itemSpanClass(item)}`} style={`background: ${item.color};${item._row2 ? ' grid-row: span 2;' : ''}`}></div>
+        ) : (
+          <a
+            href={`${base}projets/${item.slug}`}
+            class={`item ${itemSpanClass(item)}`}
+            data-poids={item.poids}
+            data-cats={item.categories?.map(c => c.portfolio_categories_id?.slug).filter(Boolean).join(',')}
+            style={item._heroRow2 ? 'grid-row: span 2' : undefined}
+          >
+            {item.image_vignette && (
+              <img src={imageUrl(item.image_vignette.id, 800)} alt={item.titre} loading="lazy" />
+            )}
+            <div class="overlay">
+              <div class="info">
+                <div class="titre">{item.titre}</div>
+                <div class="meta">{item.annee}{item.diffusion ? ` · ${item.diffusion}` : ''}</div>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
   ))}
 </div>
 
@@ -356,21 +339,24 @@ for (const item of layoutResult) {
   }
 
   /* ── DOM ── */
-  var grid = document.querySelector('.grid');
+  var wrapper = document.querySelector('.portfolio-wrapper');
   var filterBtns = document.querySelectorAll('.filters a[data-cat]');
 
-  function projectItems() {
-    return Array.prototype.slice.call(grid.querySelectorAll('.item:not(.tile)'));
+  function allYearBlocks() {
+    return Array.prototype.slice.call(wrapper.querySelectorAll('.year-block'));
   }
 
-  function removeClientTiles() {
+  function projectItems() {
+    return Array.prototype.slice.call(wrapper.querySelectorAll('.item:not(.tile)'));
+  }
+
+  function removeClientTiles(grid) {
     grid.querySelectorAll('.client-tile').forEach(function(t) { t.remove(); });
   }
 
-  function applyLayout(items) {
-    removeClientTiles();
-    /* reset ordre + visibilité sur tous les projets */
-    projectItems().forEach(function(el) {
+  function applyLayout(items, grid) {
+    removeClientTiles(grid);
+    items.forEach(function(el) {
       el.style.order = '';
       el.style.display = 'none';
       el.style.gridColumn = '';
@@ -398,16 +384,16 @@ for (const item of layoutResult) {
   }
 
   function restoreServerLayout() {
-    removeClientTiles();
-    projectItems().forEach(function(el) {
-      el.style.display = '';
-      el.style.order = '';
-      el.style.gridColumn = '';
-      el.style.gridRow = '';
-    });
-    grid.querySelectorAll('.server-tile').forEach(function(t) {
-      t.style.display = '';
-      t.style.order = '';
+    allYearBlocks().forEach(function(block) {
+      block.style.display = '';
+      var g = block.querySelector('.grid');
+      removeClientTiles(g);
+      g.querySelectorAll('.item:not(.tile)').forEach(function(el) {
+        el.style.display = ''; el.style.order = ''; el.style.gridColumn = ''; el.style.gridRow = '';
+      });
+      g.querySelectorAll('.server-tile').forEach(function(t) {
+        t.style.display = ''; t.style.order = '';
+      });
     });
   }
 
@@ -417,11 +403,33 @@ for (const item of layoutResult) {
   function cancelPending() {
     if (_filterTimer)  { clearTimeout(_filterTimer);  _filterTimer  = null; }
     if (_cleanupTimer) { clearTimeout(_cleanupTimer); _cleanupTimer = null; }
-    projectItems().forEach(function(el) {
-      el.style.transition = 'none'; el.style.opacity = '';
-    });
-    grid.querySelectorAll('.client-tile, .server-tile').forEach(function(t) {
+    projectItems().forEach(function(el) { el.style.transition = 'none'; el.style.opacity = ''; });
+    wrapper.querySelectorAll('.client-tile, .server-tile').forEach(function(t) {
       t.style.transition = 'none'; t.style.opacity = '';
+    });
+  }
+
+  function byPosition(els) {
+    return els.map(function(el) {
+      var r = el.getBoundingClientRect();
+      return { el: el, top: r.top, left: r.left };
+    }).sort(function(a, b) { return a.top !== b.top ? a.top - b.top : a.left - b.left; });
+  }
+
+  function applyPerYear(cat) {
+    allYearBlocks().forEach(function(block) {
+      var g = block.querySelector('.grid');
+      var blockItems = Array.prototype.slice.call(g.querySelectorAll('.item:not(.tile)'));
+      var visible = blockItems.filter(function(el) {
+        return (el.getAttribute('data-cats') || '').split(',').indexOf(cat) !== -1;
+      });
+      if (visible.length === 0) {
+        block.style.display = 'none';
+      } else {
+        block.style.display = '';
+        g.querySelectorAll('.server-tile').forEach(function(t) { t.style.display = 'none'; });
+        applyLayout(visible, g);
+      }
     });
   }
 
@@ -432,12 +440,7 @@ for (const item of layoutResult) {
 
     if (!animate) {
       if (cat === '') { restoreServerLayout(); }
-      else {
-        grid.querySelectorAll('.server-tile').forEach(function(t) { t.style.display = 'none'; });
-        applyLayout(projectItems().filter(function(el) {
-          return (el.getAttribute('data-cats') || '').split(',').indexOf(cat) !== -1;
-        }));
-      }
+      else { applyPerYear(cat); }
       history.pushState({ cat: cat }, '', cat ? BASE + '?cat=' + cat : BASE);
       return;
     }
@@ -445,24 +448,11 @@ for (const item of layoutResult) {
     cancelPending();
 
     var allProjects = projectItems();
-    var nextVisible = cat === '' ? allProjects : allProjects.filter(function(el) {
-      return (el.getAttribute('data-cats') || '').split(',').indexOf(cat) !== -1;
-    });
-
     var FADE = 280, FADE_IN = 600, STAGGER = 40, MAX_SPREAD = 360;
 
-    function byPosition(els) {
-      return els.map(function(el) {
-        var r = el.getBoundingClientRect();
-        return { el: el, top: r.top, left: r.left };
-      }).sort(function(a, b) {
-        return a.top !== b.top ? a.top - b.top : a.left - b.left;
-      });
-    }
-
-    /* ── Phase 1 : tout disparaît en cascade ── */
+    /* Phase 1 : fondu sortant */
     var fadeOutEls = allProjects.filter(function(el) { return el.style.display !== 'none'; });
-    grid.querySelectorAll('.client-tile, .server-tile').forEach(function(t) {
+    wrapper.querySelectorAll('.client-tile, .server-tile').forEach(function(t) {
       if (t.style.display !== 'none') fadeOutEls.push(t);
     });
     var outSorted = byPosition(fadeOutEls);
@@ -474,35 +464,23 @@ for (const item of layoutResult) {
       item.el.style.opacity = '0';
     });
 
-    /* ── Phase 2 : layout, quand tout est invisible ── */
+    /* Phase 2 : nouveau layout */
     _filterTimer = setTimeout(function() {
       _filterTimer = null;
-
-      if (cat === '') { restoreServerLayout(); }
-      else {
-        grid.querySelectorAll('.server-tile').forEach(function(t) { t.style.display = 'none'; });
-        applyLayout(nextVisible);
-      }
-      /* Les projets nextVisible gardent leur opacity:0 hérité de la Phase 1.
-         On stoppe seulement le fondu sortant en vidant la transition. */
+      if (cat === '') { restoreServerLayout(); } else { applyPerYear(cat); }
       allProjects.forEach(function(el) { el.style.transition = ''; });
-
-      /* Les nouvelles tuiles n'ont pas d'opacity inline → forcer 0 avant reflow */
-      grid.querySelectorAll('.client-tile').forEach(function(t) {
-        t.style.opacity = '0'; t.style.transition = '';
-      });
+      wrapper.querySelectorAll('.client-tile').forEach(function(t) { t.style.opacity = '0'; t.style.transition = ''; });
       if (cat === '') {
-        grid.querySelectorAll('.server-tile').forEach(function(t) {
+        wrapper.querySelectorAll('.server-tile').forEach(function(t) {
           if (t.style.display !== 'none') { t.style.opacity = '0'; t.style.transition = ''; }
         });
       }
 
-      /* ── Phase 3 : tout réapparaît en cascade ── */
-      /* byPosition() force un reflow → valide opacity:0 comme état "from" pour les transitions */
-      var fadeInEls = nextVisible.filter(function(el) { return el.style.display !== 'none'; });
-      grid.querySelectorAll('.client-tile').forEach(function(t) { fadeInEls.push(t); });
+      /* Phase 3 : fondu entrant */
+      var fadeInEls = projectItems().filter(function(el) { return el.style.display !== 'none'; });
+      wrapper.querySelectorAll('.client-tile').forEach(function(t) { fadeInEls.push(t); });
       if (cat === '') {
-        grid.querySelectorAll('.server-tile').forEach(function(t) {
+        wrapper.querySelectorAll('.server-tile').forEach(function(t) {
           if (t.style.display !== 'none') fadeInEls.push(t);
         });
       }
@@ -514,14 +492,10 @@ for (const item of layoutResult) {
         item.el.style.transition = 'opacity ' + FADE_IN + 'ms ' + d + 'ms';
         requestAnimationFrame(function() { item.el.style.opacity = '1'; });
       });
-
-      /* nettoyage — buffer généreux pour couvrir délai rAF + marge */
       _cleanupTimer = setTimeout(function() {
         _cleanupTimer = null;
-        allProjects.forEach(function(el) { el.style.transition = ''; el.style.opacity = ''; });
-        grid.querySelectorAll('.client-tile, .server-tile').forEach(function(t) {
-          t.style.transition = ''; t.style.opacity = '';
-        });
+        projectItems().forEach(function(el) { el.style.transition = ''; el.style.opacity = ''; });
+        wrapper.querySelectorAll('.client-tile, .server-tile').forEach(function(t) { t.style.transition = ''; t.style.opacity = ''; });
       }, inSpread + FADE_IN + 150);
 
     }, outSpread + FADE + 10);
@@ -552,7 +526,8 @@ for (const item of layoutResult) {
 <style is:global>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: #0a0a0a; color: #e8e8e0; font-family: 'Barlow Condensed', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
-  .grid { flex: 1; }
+  .portfolio-wrapper { flex: 1; display: flex; flex-direction: column; }
+  .year-block { display: flex; flex-direction: column; }
 
 
   nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 0.5px solid rgba(13,102,127,0.35); }
@@ -571,8 +546,8 @@ for (const item of layoutResult) {
   .filters a.active { background: rgba(28,201,254,0.08); color: #1CC9FE; border-color: rgba(28,201,254,0.4); }
   .item.hidden { display: none; }
 
-  .grid { display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: auto; gap: 5px; padding: 5px; }
-  .item { position: relative; overflow: hidden; cursor: pointer; background: #181818; border-radius: 10px; text-decoration: none; color: inherit; height: calc(100vw * 9 / 48); }
+  .grid { display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: calc(100vw * 9 / 48); gap: 5px; padding: 5px; }
+  .item { position: relative; overflow: hidden; cursor: pointer; background: #181818; border-radius: 10px; text-decoration: none; color: inherit; }
   .span-8 { grid-column: span 8; grid-row: span 2; }
   .span-6 { grid-column: span 6; }
   .span-4 { grid-column: span 4; }
@@ -587,7 +562,7 @@ for (const item of layoutResult) {
   .item .titre { font-size: 16px; font-weight: 700; color: #fff; font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; }
   .item .meta { font-size: 11px; color: #7D8893; margin-top: 4px; }
 
-  .year-sep { grid-column: 1 / -1; display: flex; align-items: center; gap: 16px; padding: 8px 4px; overflow: hidden; }
+  .year-sep { display: flex; align-items: center; gap: 16px; padding: 8px 9px; overflow: hidden; }
   .year-label { position: relative; flex-shrink: 0; font-size: 48px; font-weight: 700; letter-spacing: .04em; line-height: 1; }
   .year-left { font-family: 'stenciletta-left', 'Barlow Condensed', sans-serif; color: #1CC9FE; }
   .year-right { font-family: 'stenciletta-right', 'Barlow Condensed', sans-serif; color: rgba(232,232,224,0.25); position: absolute; top: 0; left: 0; }
@@ -605,8 +580,7 @@ for (const item of layoutResult) {
     nav .links { gap: 14px; }
     .filters { padding: 8px 16px; gap: 5px; }
 
-    .grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: auto; gap: 3px; padding: 3px; }
-    .item { height: 45vw; }
+    .grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 45vw; gap: 3px; padding: 3px; }
     .span-8 { grid-column: span 2; grid-row: span 1; }
     .span-6 { grid-column: span 2; }
     .span-4 { grid-column: span 1; }
