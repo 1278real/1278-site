@@ -129,10 +129,13 @@ function mosaicLayout(items, lookahead = 8) {
 
 const layoutResult = mosaicLayout(projetsRaw);
 
-// Injecte un séparateur d'année au début de chaque rangée quand l'année change
+// Injecte les séparateurs d'année au début des rangées CSS.
+// Le bloc span-8 normal [span-8 + comp-4 + comp-4] couvre 2 rangées :
+// le compteur postSpan8 compense le décalage (16%12=4 au lieu de 0).
 const projets = [];
 let rowPos = 0;
 let currentYear = null;
+let postSpan8 = 0;
 for (const item of layoutResult) {
   const span = item._tile ? item._span : (item._heroSpan || getSpan(item.poids));
   if (!item._tile && rowPos === 0) {
@@ -143,7 +146,14 @@ for (const item of layoutResult) {
     }
   }
   projets.push(item);
-  rowPos = (rowPos + span) % 12;
+  if (!item._tile && span === 8 && rowPos === 0) {
+    rowPos = 8; postSpan8 = 2;
+  } else if (postSpan8 > 0) {
+    postSpan8--;
+    if (postSpan8 === 0) rowPos = 0;
+  } else {
+    rowPos = (rowPos + span) % 12;
+  }
 }
 ---
 
@@ -574,11 +584,11 @@ for (const item of layoutResult) {
   .item .titre { font-size: 16px; font-weight: 700; color: #fff; font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; }
   .item .meta { font-size: 11px; color: #7D8893; margin-top: 4px; }
 
-  .year-sep { grid-column: 1 / -1; display: flex; align-items: center; gap: 20px; padding: 28px 4px 12px; border-top: 0.5px solid rgba(28,201,254,0.2); overflow: hidden; }
-  .year-label { font-size: 28px; font-weight: 700; font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; color: #1CC9FE; letter-spacing: .04em; flex-shrink: 0; }
-  .sep-clients { overflow: hidden; flex: 1; mask-image: linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent); }
-  .sep-track { display: flex; gap: 36px; align-items: center; width: max-content; animation: scroll-clients 28s linear infinite; will-change: transform; }
-  .sep-track img { height: 20px; width: auto; max-width: 100px; min-width: 30px; opacity: 0.5; transition: opacity .2s; flex-shrink: 0; }
+  .year-sep { grid-column: 1 / -1; display: flex; align-items: center; gap: 16px; padding: 12px 4px 6px; overflow: hidden; }
+  .year-label { font-size: 16px; font-weight: 700; font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; color: #1CC9FE; letter-spacing: .06em; flex-shrink: 0; }
+  .sep-clients { overflow: hidden; flex: 1; mask-image: linear-gradient(to right, transparent, black 60px, black calc(100% - 60px), transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 60px, black calc(100% - 60px), transparent); }
+  .sep-track { display: flex; gap: 28px; align-items: center; width: max-content; animation: scroll-clients 28s linear infinite; will-change: transform; }
+  .sep-track img { height: 14px; width: auto; max-width: 80px; min-width: 24px; opacity: 0.5; transition: opacity .2s; flex-shrink: 0; }
   .sep-track img:hover { opacity: 0.9; }
   @keyframes scroll-clients { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
