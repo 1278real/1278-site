@@ -159,7 +159,7 @@ const yearGroups = [...yearMap.keys()]
 <div class="filters">
   <a href="#" data-cat="" class="active">{t.portfolio.showAll}</a>
   {categories.map(cat => (
-    <a href="#" data-cat={cat.slug}>{cat.nom}</a>
+    <a href="#" data-cat={cat.slug}>{t.categories[cat.slug] || cat.nom}</a>
   ))}
 </div>
 

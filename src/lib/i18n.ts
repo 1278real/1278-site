@@ -5,6 +5,7 @@ export const ui = {
   fr: {
     nav: { portfolio: 'Portfolio', flashback: 'Flashback', contact: 'Contact', lang: 'EN' },
     portfolio: { showAll: 'Tout afficher' },
+    categories: {} as Record<string, string>,
     projet: { back: '← Portfolio' },
     contact: { phone: 'Téléphone', email: 'Email' },
     flashback: {
@@ -41,6 +42,15 @@ export const ui = {
   en: {
     nav: { portfolio: 'Portfolio', flashback: 'Flashback', contact: 'Contact', lang: 'FR' },
     portfolio: { showAll: 'Show all' },
+    categories: {
+      directs: 'Live',
+      divertissements: 'Entertainment',
+      documentaire: 'Documentary',
+      institutionnel: 'Corporate',
+      'mise-en-place': 'Artistic Direction',
+      'mode-arts': 'Fashion & Arts',
+      sports: 'Sports',
+    } as Record<string, string>,
     projet: { back: '← Portfolio' },
     contact: { phone: 'Phone', email: 'Email' },
     flashback: {
@@ -54,12 +64,12 @@ export const ui = {
         {
           annee: '2005',
           titre: 'FADE IN Founded',
-          texte: 'TV dressing & graphics company. Visual effects artist on <em>Ça se discute</em>, <em>Miss France</em>, <em>Roland Garros</em>, Cannes Film Festival, Ligue 1, Top 14 and the FIFA World Cup.',
+          texte: 'TV-oriented graphics company. Visual effects artist on <em>Ça se discute</em>, <em>Miss France</em>, <em>Roland Garros</em>, Cannes Film Festival, Ligue 1, Top 14 and the FIFA World Cup.',
         },
         {
           annee: '2010',
           titre: 'Director',
-          texte: 'Live and location directing — talk shows, sports, studio productions. One motto: leveraging technical expertise & past collaborations to serve present projects.',
+          texte: 'Studio and on-location directing — talk shows and sports. One credo: leveraging technical expertise & past collaborations to serve present projects.',
         },
         {
           annee: '2016',
