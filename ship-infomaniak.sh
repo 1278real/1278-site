@@ -12,8 +12,14 @@ Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>"
 echo "→ push..."
 git push
 
-echo "→ déclenchement Build & Deploy sur GitHub Actions..."
+echo "→ déclenchement Build & Deploy..."
 gh workflow run deploy.yml --repo 1278real/1278-site
 
+echo "→ attente du démarrage..."
+sleep 6
+RUN_ID=$(gh run list --repo 1278real/1278-site --workflow=deploy.yml --limit=1 --json databaseId -q '.[0].databaseId')
+
+gh run watch "$RUN_ID" --repo 1278real/1278-site --exit-status
+
 echo ""
-echo "✓ En route. Suivi : https://github.com/1278real/1278-site/actions"
+echo "✓ C'est en ligne ! https://1-2-7-8.tv/aZeRtYuIoP/test/"
