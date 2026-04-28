@@ -2,9 +2,9 @@
 
 ## Quick wins (< 1h)
 
-- [ ] Déposer `public/fonts/Stenciletta.woff2` pour activer la typo du logo
-- [ ] Meta og:image sur la page projet (image vignette → partage social)
-- [ ] Classe `active` sur "Portfolio" dans la nav de la page projet
+- [x] Typo Stenciletta via Adobe Fonts (kit deq5imu) — stenciletta-solid sur nav + titres projets
+- [x] Meta og:image sur la page projet (image vignette → partage social)
+- [x] Classe `active` sur "Portfolio" dans la nav de la page projet
 
 ## Features courtes (1–3h)
 
