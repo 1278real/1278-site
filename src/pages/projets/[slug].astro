@@ -85,21 +85,20 @@ const youtubeId = getYoutubeId(projet.url_youtube);
   <div class="description" set:html={projet.description} />
 )}
 
-{youtubeId && (
-  <div class="video-wrap">
-    <iframe
-      src={`https://www.youtube-nocookie.com/embed/${youtubeId}`}
-      title={projet.titre}
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen
-      loading="lazy"
-    ></iframe>
-  </div>
-)}
-
-{projet.images && projet.images.length > 0 && (
+{(youtubeId || (projet.images && projet.images.length > 0)) && (
   <div class="gallery">
-    {projet.images.map(img => {
+    {youtubeId && (
+      <div class="gallery-video">
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${youtubeId}`}
+          title={projet.titre}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          loading="lazy"
+        ></iframe>
+      </div>
+    )}
+    {projet.images && projet.images.map(img => {
       const fileId = getImageId(img);
       return fileId ? (
         <img src={imageUrl(fileId, 1200)} alt="" loading="lazy" />
@@ -145,10 +144,9 @@ const youtubeId = getYoutubeId(projet.url_youtube);
 
   .description { padding: 32px 24px; max-width: 720px; font-size: 16px; line-height: 1.65; }
 
-  .video-wrap { padding: 5px; }
-  .video-wrap iframe { width: 100%; aspect-ratio: 16/9; border: none; display: block; border-radius: 6px; }
-
   .gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 5px; padding-bottom: 20px; }
+  .gallery-video { grid-column: span 2; position: relative; aspect-ratio: 16/9; overflow: hidden; border-radius: 6px; }
+  .gallery-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
   .gallery img { width: 100%; display: block; object-fit: cover; }
 
   footer { background: #0D667F; padding: 10px 24px; display: flex; justify-content: space-between; margin-top: auto; }
