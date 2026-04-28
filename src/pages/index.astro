@@ -27,6 +27,22 @@ const makeTile = (span) => {
 };
 const itemSpanClass = (item) => item._tile ? `span-${item._span}` : item._heroSpan ? `span-${item._heroSpan}` : colSpan(item.poids);
 
+function splitGap(space: number) {
+  const tiles = [];
+  let rem = space;
+  while (rem > 0) {
+    if (rem === 5)       { tiles.push(3, 2); rem = 0; }
+    else if (rem === 7)  { tiles.push(4, 3); rem = 0; }
+    else if (rem === 11) { tiles.push(6, 3, 2); rem = 0; }
+    else if (rem >= 6)   { tiles.push(6); rem -= 6; }
+    else if (rem >= 4)   { tiles.push(4); rem -= 4; }
+    else if (rem >= 3)   { tiles.push(3); rem -= 3; }
+    else if (rem >= 2)   { tiles.push(2); rem -= 2; }
+    else                 { tiles.push(1); rem -= 1; }
+  }
+  return tiles;
+}
+
 function findInWindow(pool, targetSpan, lookahead) {
   const limit = Math.min(lookahead, pool.length);
   for (let j = 0; j < limit; j++) {
@@ -37,9 +53,8 @@ function findInWindow(pool, targetSpan, lookahead) {
 
 function mosaicLayout(items, lookahead = 8) {
   const pool = [...items];
-  const result = [];
+  const result: any[] = [];
   let blockCount = 0;
-  let gapStreak = 0;
   let alternateReverse = false;
 
   while (pool.length > 0) {
@@ -66,11 +81,10 @@ function mosaicLayout(items, lookahead = 8) {
         }
       }
       alternateReverse = !alternateReverse;
-      gapStreak = 0;
     } else {
       let rowSpace = 12;
       const hasRhythm = (blockCount % 5 === 0);
-      if (hasRhythm) { rowSpace -= 2; gapStreak = 0; }
+      if (hasRhythm) { rowSpace -= 2; }
 
       const rowStart = result.length;
       while (rowSpace > 0 && pool.length > 0) {
@@ -96,27 +110,24 @@ function mosaicLayout(items, lookahead = 8) {
         result.splice(at, 0, makeTile(2));
       }
 
-      // Tuile de gap : position aléatoire, max 1 rangée consécutive, pas si tuile de rythme.
-      if (!hasRhythm && (rowSpace === 1 || rowSpace === 2) && gapStreak < 1) {
+      // Tuile(s) de gap : remplit tout l'espace restant avec des spans valides.
+      if (!hasRhythm && rowSpace > 0 && pool.length > 0) {
         const at = rowStart + Math.floor(Math.random() * (result.length - rowStart + 1));
-        result.splice(at, 0, makeTile(rowSpace));
-        gapStreak++;
-      } else if (!hasRhythm) {
-        gapStreak = 0;
+        splitGap(rowSpace).forEach((s, i) => result.splice(at + i, 0, makeTile(s)));
       }
 
-      if (pool.length === 0 && rowSpace > 2) {
+      if (pool.length === 0 && rowSpace > 0) {
         let lastProj = null;
         for (let li = result.length - 1; li >= 0; li--) {
           if (!result[li]._tile) { lastProj = result[li]; break; }
         }
-        if (lastProj && rowSpace >= 8 && getSpan(lastProj.poids) <= 4) {
-          lastProj._heroSpan = 8;
-          lastProj._heroRow2 = true;
+        if (lastProj && rowSpace >= 8 && getSpan((lastProj as any).poids) <= 4) {
+          (lastProj as any)._heroSpan = 8;
+          (lastProj as any)._heroRow2 = true;
           result.push(makeTile(4));
           result.push(makeTile(4));
         } else {
-          result.push(makeTile(rowSpace));
+          splitGap(rowSpace).forEach(s => result.push(makeTile(s)));
         }
       }
 
@@ -259,10 +270,23 @@ const yearGroups = [...yearMap.keys()]
       tileColor1 = idx;
       return { _tile: true, span: span, color: PALETTE[idx] };
     }
+    function splitGap(space) {
+      var tiles = [], rem = space;
+      while (rem > 0) {
+        if (rem === 5)       { tiles.push(3, 2); rem = 0; }
+        else if (rem === 7)  { tiles.push(4, 3); rem = 0; }
+        else if (rem === 11) { tiles.push(6, 3, 2); rem = 0; }
+        else if (rem >= 6)   { tiles.push(6); rem -= 6; }
+        else if (rem >= 4)   { tiles.push(4); rem -= 4; }
+        else if (rem >= 3)   { tiles.push(3); rem -= 3; }
+        else if (rem >= 2)   { tiles.push(2); rem -= 2; }
+        else                 { tiles.push(1); rem -= 1; }
+      }
+      return tiles;
+    }
     var pool = items.slice();
     var result = [];
     var blockCount = 0;
-    var gapStreak = 0;
     var alternateReverse = false;
 
     while (pool.length > 0) {
@@ -287,11 +311,10 @@ const yearGroups = [...yearMap.keys()]
           }
         }
         alternateReverse = !alternateReverse;
-        gapStreak = 0;
       } else {
         var rowSpace = 12;
         var hasRhythm = (blockCount % 5 === 0);
-        if (hasRhythm) { rowSpace -= 2; gapStreak = 0; }
+        if (hasRhythm) { rowSpace -= 2; }
         var rowStart = result.length;
         while (rowSpace > 0 && pool.length > 0) {
           var limit = Math.min(lookahead, pool.length);
@@ -311,14 +334,11 @@ const yearGroups = [...yearMap.keys()]
           var at = rowStart + Math.floor(Math.random() * (result.length - rowStart + 1));
           result.splice(at, 0, mkTile(2));
         }
-        if (!hasRhythm && (rowSpace === 1 || rowSpace === 2) && gapStreak < 1) {
+        if (!hasRhythm && rowSpace > 0 && pool.length > 0) {
           var at = rowStart + Math.floor(Math.random() * (result.length - rowStart + 1));
-          result.splice(at, 0, mkTile(rowSpace));
-          gapStreak++;
-        } else if (!hasRhythm) {
-          gapStreak = 0;
+          splitGap(rowSpace).forEach(function(s, i) { result.splice(at + i, 0, mkTile(s)); });
         }
-        if (pool.length === 0 && rowSpace > 2) {
+        if (pool.length === 0 && rowSpace > 0) {
           var lp = null;
           for (var lpi = result.length - 1; lpi >= 0; lpi--) {
             if (!result[lpi]._tile) { lp = result[lpi]; break; }
@@ -329,7 +349,7 @@ const yearGroups = [...yearMap.keys()]
             result.push(mkTile(4));
             result.push(mkTile(4));
           } else {
-            result.push(mkTile(rowSpace));
+            splitGap(rowSpace).forEach(function(s) { result.push(mkTile(s)); });
           }
         }
         if (result.length === rowStart && pool.length > 0) result.push(pool.shift());
