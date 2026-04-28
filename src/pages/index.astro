@@ -127,7 +127,18 @@ function mosaicLayout(items, lookahead = 8) {
   return result;
 }
 
-const projets = mosaicLayout(projetsRaw);
+const years = [...new Set(
+  projetsRaw.map(p => p.annee).filter(Boolean).map(Number)
+)].sort((a, b) => b - a);
+
+const projets = [];
+years.forEach(annee => {
+  const group = projetsRaw.filter(p => Number(p.annee) === annee);
+  projets.push({ _separator: true, annee });
+  projets.push(...mosaicLayout(group));
+});
+const noYear = projetsRaw.filter(p => !p.annee);
+if (noYear.length) projets.push(...mosaicLayout(noYear));
 ---
 
 <!DOCTYPE html>
@@ -165,7 +176,22 @@ const projets = mosaicLayout(projetsRaw);
 </div>
 
 <div class="grid">
-  {projets.map(item => item._tile ? (
+  {projets.map(item => item._separator ? (
+    <div class="year-sep">
+      <span class="year-label">{item.annee}</span>
+      {clients && clients.length > 0 && (
+        <div class="sep-clients">
+          <div class="sep-track">
+            {[...clients, ...clients].map((c) => (
+              c.logo
+                ? <img src={imageUrl(c.logo, 120)} alt={c.nom} title={c.nom} />
+                : <span>{c.nom}</span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  ) : item._tile ? (
     <div class={`item tile server-tile ${itemSpanClass(item)}`} style={`background: ${item.color};${item._row2 ? ' grid-row: span 2;' : ''}`}></div>
   ) : (
     <a
@@ -191,18 +217,6 @@ const projets = mosaicLayout(projetsRaw);
     </a>
   ))}
 </div>
-
-{clients && clients.length > 0 && (
-  <div class="clients-band">
-    <div class="clients-track">
-      {[...clients, ...clients].map((c) => (
-        c.logo
-          ? <img src={imageUrl(c.logo, 200)} alt={c.nom} title={c.nom} />
-          : <span class="client-name">{c.nom}</span>
-      ))}
-    </div>
-  </div>
-)}
 
 <footer>
   <span>1·2·7·8 réalisation(s)</span>
@@ -554,11 +568,12 @@ const projets = mosaicLayout(projetsRaw);
   .item .titre { font-size: 16px; font-weight: 700; color: #fff; font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; }
   .item .meta { font-size: 11px; color: #7D8893; margin-top: 4px; }
 
-  .clients-band { overflow: hidden; border-top: 0.5px solid rgba(255,255,255,0.06); border-bottom: 0.5px solid rgba(255,255,255,0.06); padding: 16px 0; background: #0a0a0a; }
-  .clients-track { display: flex; gap: 48px; align-items: center; width: max-content; animation: scroll-clients 30s linear infinite; }
-  .clients-track img { height: 28px; width: auto; opacity: 0.7; transition: opacity .2s; }
-  .clients-track img:hover { opacity: 1; }
-  .client-name { font-size: 11px; color: #7D8893; letter-spacing: .1em; white-space: nowrap; }
+  .year-sep { grid-column: 1 / -1; display: flex; align-items: center; gap: 20px; padding: 28px 4px 12px; border-top: 0.5px solid rgba(28,201,254,0.2); overflow: hidden; }
+  .year-label { font-size: 28px; font-weight: 700; font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; color: #1CC9FE; letter-spacing: .04em; flex-shrink: 0; }
+  .sep-clients { overflow: hidden; flex: 1; }
+  .sep-track { display: flex; gap: 36px; align-items: center; width: max-content; animation: scroll-clients 28s linear infinite; }
+  .sep-track img { height: 20px; width: auto; opacity: 0.5; transition: opacity .2s; }
+  .sep-track img:hover { opacity: 0.9; }
   @keyframes scroll-clients { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
   footer { background: #0D667F; padding: 10px 24px; display: flex; justify-content: space-between; }
