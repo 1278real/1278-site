@@ -135,6 +135,7 @@ const getImageId = (img) => img?.directus_files_id?.id || img?.directus_files_id
   @media (max-width: 640px) {
     nav { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
     nav .links { gap: 14px; }
+    .logo-sub { display: none; }
 
     .projet-header { flex-direction: column; gap: 12px; padding: 16px 16px 0; }
     h1 { font-size: 28px; }
@@ -144,5 +145,7 @@ const getImageId = (img) => img?.directus_files_id?.id || img?.directus_files_id
     .description { padding: 20px 16px; font-size: 15px; }
 
     .gallery { grid-template-columns: 1fr; }
+
+    footer { flex-direction: column; gap: 4px; }
   }
 </style>
