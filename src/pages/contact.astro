@@ -48,7 +48,7 @@ const base = import.meta.env.BASE_URL;
         <div class="contact-line contact-emails">
           <span class="label">Email</span>
           <a href="mailto:contact@1-2-7-8.tv" class="value">contact@1-2-7-8.tv</a>
-          <a href="mailto:alexis@1-2-7-8.tv" class="value">alexis@1-2-7-8.tv</a>
+          <a href="mailto:alexis@1-2-7-8.tv" class="value value-secondary">alexis@1-2-7-8.tv</a>
         </div>
         <a href="https://bsky.app/profile/1-2-7-8.pro" target="_blank" rel="noopener" class="contact-line">
           <span class="label">Bluesky</span>
@@ -109,6 +109,7 @@ const base = import.meta.env.BASE_URL;
   .contact-emails { cursor: default; }
   .contact-emails:hover { color: inherit; border-left-color: transparent; }
   .contact-emails .value { text-decoration: none; color: inherit; transition: color .15s; display: block; }
+  .contact-emails .value-secondary { color: #7D8893; font-weight: 400; }
   .contact-emails .value:hover { color: #1CC9FE; }
 
   .legal { margin-top: 32px; font-size: 10px; color: #333; line-height: 1.7; padding-left: 12px; }
