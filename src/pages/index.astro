@@ -218,6 +218,11 @@ const yearGroups = [...yearMap.keys()]
             {item.image_vignette && (
               <img src={imageUrl(item.image_vignette.id, 800)} alt={item.titre} loading="lazy" />
             )}
+            {item.video_vignette && (
+              <video muted loop playsinline preload="none">
+                <source src={`https://api-gthp.1-2-7-8.solutions/assets/${item.video_vignette}`} type="video/mp4" />
+              </video>
+            )}
             <div class="overlay">
               <div class="info">
                 <div class="titre">{item.titre}</div>
@@ -550,6 +555,26 @@ const yearGroups = [...yearMap.keys()]
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 })();
+
+(function() {
+  document.querySelectorAll('.item video').forEach(function(video) {
+    var item = video.closest('.item');
+    var leaveTimer = null;
+    item.addEventListener('mouseenter', function() {
+      if (leaveTimer) { clearTimeout(leaveTimer); leaveTimer = null; }
+      video.play().catch(function() {});
+      video.style.opacity = '1';
+    });
+    item.addEventListener('mouseleave', function() {
+      video.style.opacity = '0';
+      leaveTimer = setTimeout(function() {
+        leaveTimer = null;
+        video.pause();
+        video.currentTime = 0;
+      }, 400);
+    });
+  });
+})();
 </script>
 
 </body>
@@ -587,6 +612,7 @@ const yearGroups = [...yearMap.keys()]
   .span-2 { grid-column: span 2; }
   .span-1 { grid-column: span 1; }
   .item img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .item video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .4s; pointer-events: none; }
   .item .overlay { position: absolute; inset: 0; background: rgba(0,0,0,0); transition: background .2s; display: flex; flex-direction: column; justify-content: flex-end; padding: 10px; }
   .item:hover .overlay { background: rgba(0,0,0,0.65); }
   .item .info { opacity: 0; transform: translateY(4px); transition: all .15s; }
