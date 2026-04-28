@@ -363,7 +363,7 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
 
   function applyLayout(items, grid) {
     removeClientTiles(grid);
-    items.forEach(function(el) {
+    Array.prototype.slice.call(grid.querySelectorAll('.item:not(.tile)')).forEach(function(el) {
       el.style.order = '';
       el.style.display = 'none';
       el.style.gridColumn = '';
