@@ -43,6 +43,7 @@ export const ui = {
     nav: { portfolio: 'Portfolio', flashback: 'Flashback', contact: 'Contact', lang: 'FR' },
     portfolio: { showAll: 'Show all' },
     categories: {
+      selection: 'Selection',
       directs: 'Live',
       divertissements: 'Entertainment',
       documentaire: 'Documentary',

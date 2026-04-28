@@ -152,13 +152,19 @@ for (const p of projetsRaw) {
 const yearGroups = [...yearMap.keys()]
   .sort((a, b) => b - a)
   .map(yr => ({ annee: yr, items: mosaicLayout(yearMap.get(yr)) }));
+
+const sortedCategories = [...categories].sort((a, b) => {
+  if (a.slug === 'selection') return -1;
+  if (b.slug === 'selection') return 1;
+  return 0;
+});
 ---
 
 <BaseLayout lang={lang} title="1·2·7·8 réalisation(s)" activePage="portfolio">
 
 <div class="filters">
   <a href="#" data-cat="" class="active">{t.portfolio.showAll}</a>
-  {categories.map(cat => (
+  {sortedCategories.map(cat => (
     <a href="#" data-cat={cat.slug}>{t.categories[cat.slug] || cat.nom}</a>
   ))}
 </div>
@@ -508,7 +514,11 @@ const yearGroups = [...yearMap.keys()]
     });
   });
 
-  var initial = new URLSearchParams(location.search).get('cat') || '';
+  var hasSelection = Array.prototype.some.call(filterBtns, function(btn) {
+    return btn.getAttribute('data-cat') === 'selection';
+  });
+  var params = new URLSearchParams(location.search);
+  var initial = params.has('cat') ? (params.get('cat') || '') : (hasSelection ? 'selection' : '');
   if (initial) applyFilter(initial, false);
 
   window.addEventListener('popstate', function(e) {
