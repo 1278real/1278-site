@@ -12,7 +12,7 @@ const base = import.meta.env.BASE_URL;
 
 if (!projet) return Astro.redirect('/');
 
-const getImageId = (img) => img?.directus_files_id?.id || img?.id || null;
+const getImageId = (img) => img?.directus_files_id?.id || img?.directus_files_id || img?.id || null;
 ---
 
 <!DOCTYPE html>
