@@ -1,0 +1,111 @@
+---
+const base = import.meta.env.BASE_URL;
+---
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact · 1·2·7·8 réalisation(s)</title>
+  <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml">
+  <link rel="icon" href={`${base}favicon.ico`} sizes="any">
+  <link rel="stylesheet" href="https://use.typekit.net/deq5imu.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav>
+  <a href={base} class="logo">
+    <img src={`${base}logo.png`} class="logo-mark" alt="1·2·7·8 réalisation(s)" onerror="this.style.display='none';this.parentElement.querySelector('.logo-fallback').style.display='flex'">
+    <span class="logo-fallback" style="display:none"><span class="logo-text">1<span class="accent">·</span>2<span class="accent">·</span>7<span class="accent">·</span>8</span><span class="logo-sub"> réalisation(s)</span></span>
+  </a>
+  <div class="links">
+    <a href={base}>Portfolio</a>
+    <a href={`${base}flashback`}>Flashback</a>
+    <a href={`${base}contact`} class="active">Contact</a>
+    <a href={`${base}en`}>EN</a>
+  </div>
+</nav>
+
+<main>
+  <h1>Contact</h1>
+
+  <div class="contact-lines">
+    <a href="tel:+33644663300" class="contact-line">
+      <span class="label">Téléphone</span>
+      <span class="value">+33 (0)6 44 66 33 00</span>
+    </a>
+    <a href="mailto:contact@1-2-7-8.tv" class="contact-line">
+      <span class="label">Email</span>
+      <span class="value">contact@1-2-7-8.tv</span>
+    </a>
+    <a href="https://bsky.app/profile/1-2-7-8.pro" target="_blank" rel="noopener" class="contact-line">
+      <span class="label">Bluesky</span>
+      <span class="value">@1-2-7-8.pro</span>
+    </a>
+  </div>
+
+  <div class="legal">
+    <span>24 rue Armand Numès · Bât. A · 92600 Asnières-sur-Seine · France</span>
+    <span class="sep">—</span>
+    <span>SASU au capital de 10 000 €</span>
+    <span class="sep">·</span>
+    <span>RCS 488 234 329 00040 Nanterre</span>
+    <span class="sep">·</span>
+    <span>APE 5912Z</span>
+    <span class="sep">·</span>
+    <span>TVA FR 89 488 234 329</span>
+  </div>
+</main>
+
+<footer>
+  <span>1·2·7·8 réalisation(s)</span>
+  <span>contact@1-2-7-8.tv · +33 (0)6 44 66 33 00</span>
+</footer>
+
+</body>
+</html>
+
+<style is:global>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a0a0a; color: #e8e8e0; font-family: 'Barlow Condensed', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+
+  nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 0.5px solid rgba(13,102,127,0.35); }
+  .logo { font-size: 14px; font-weight: 700; letter-spacing: .08em; text-decoration: none; color: inherit; display: flex; align-items: center; gap: 8px; }
+  .logo-mark { height: 28px; width: auto; }
+  .logo-text { font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; }
+  .logo .accent { color: #1CC9FE; }
+  .logo-sub { font-weight: 400; color: #7D8893; }
+  nav .links { display: flex; gap: 20px; }
+  nav a { font-size: 11px; color: #7D8893; text-decoration: none; letter-spacing: .1em; font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; }
+  nav a.active { color: #1CC9FE; }
+
+  main { flex: 1; padding: 56px 24px 48px; display: flex; flex-direction: column; justify-content: space-between; }
+
+  h1 { font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; font-size: 72px; font-weight: 700; letter-spacing: .02em; line-height: 1; color: #1CC9FE; margin-bottom: 48px; }
+
+  .contact-lines { display: flex; flex-direction: column; gap: 2px; max-width: 480px; }
+  .contact-line { display: flex; flex-direction: column; gap: 5px; padding: 16px 0; border-bottom: 0.5px solid rgba(255,255,255,0.07); text-decoration: none; color: inherit; transition: color .15s; }
+  .contact-line:first-child { border-top: 0.5px solid rgba(255,255,255,0.07); }
+  .contact-line:hover { color: #1CC9FE; }
+  .label { font-size: 9px; letter-spacing: .16em; color: #7D8893; text-transform: uppercase; }
+  .value { font-size: 22px; font-weight: 700; letter-spacing: .02em; }
+
+  .legal { margin-top: auto; padding-top: 48px; font-size: 10px; color: #3a3a3a; display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; }
+  .legal .sep { color: #1a1a1a; }
+
+  footer { background: #0D667F; padding: 10px 24px; display: flex; justify-content: space-between; }
+  footer span { font-size: 10px; color: rgba(255,255,255,0.7); }
+
+  @media (max-width: 640px) {
+    nav { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
+    nav .links { gap: 14px; }
+    .logo-sub { display: none; }
+    h1 { font-size: 48px; margin-bottom: 32px; }
+    main { padding: 32px 16px 32px; }
+    .value { font-size: 18px; }
+    footer { flex-direction: column; gap: 4px; }
+  }
+</style>

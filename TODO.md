@@ -9,7 +9,7 @@
 ## Features courtes (1–3h)
 
 - [ ] Page Contact — coordonnées + formulaire simple
-- [ ] Responsive mobile — grille 12 col et nav à adapter sous 768px ✓ fait
+- [x] Responsive mobile — grille 12 col et nav à adapter sous 768px ✓ fait
 - [ ] Page Flashback — galerie archives, filtre par décennie
 - [ ] Embed YouTube — champ `url_youtube` dans Directus ; sur la page détail : lecteur intégré ; sur la grille : preview au hover (option)
 
