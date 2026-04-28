@@ -170,6 +170,17 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
 </div>
 
 <div class="portfolio-wrapper">
+  {clients && clients.length > 0 && (
+    <div class="global-clients">
+      <div class="sep-track">
+        {[...clients, ...clients].map((c) => (
+          c.logo
+            ? <img src={imageUrl(c.logo, 120)} alt={c.nom} title={c.nom} />
+            : <span>{c.nom}</span>
+        ))}
+      </div>
+    </div>
+  )}
   {yearGroups.map(group => (
     <div class="year-block" data-annee={group.annee}>
       <div class="year-sep">
@@ -444,6 +455,7 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
     filterBtns.forEach(function(btn) {
       btn.classList.toggle('active', btn.getAttribute('data-cat') === cat);
     });
+    wrapper.classList.toggle('mode-selection', cat === 'selection');
 
     if (!animate) {
       if (cat === '') { restoreServerLayout(); }
@@ -587,6 +599,10 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
   .item:hover .info { opacity: 1; transform: translateY(0); }
   .item .titre { font-size: 16px; font-weight: 700; color: #fff; font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; }
   .item .meta { font-size: 11px; color: #7D8893; margin-top: 4px; }
+
+  .global-clients { display: none; overflow: hidden; padding: 8px 9px; mask-image: linear-gradient(to right, transparent, black 60px, black calc(100% - 60px), transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 60px, black calc(100% - 60px), transparent); }
+  .portfolio-wrapper.mode-selection .global-clients { display: block; }
+  .portfolio-wrapper.mode-selection .year-sep { display: none; }
 
   .year-sep { display: flex; align-items: center; gap: 16px; padding: 8px 9px; overflow: hidden; }
   .year-label { position: relative; flex-shrink: 0; font-size: 48px; font-weight: 700; letter-spacing: .04em; line-height: 1; }
