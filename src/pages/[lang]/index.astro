@@ -456,21 +456,30 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
       el.style.display = 'none'; el.style.order = ''; el.style.gridColumn = ''; el.style.gridRow = '';
       sfg.appendChild(el);
     });
-    var layout = mosaicLayout(selectionItems.map(function(el) { return { poids: Math.floor(Math.random() * 3) + 2, el: el }; }));
-    layout.forEach(function(entry, i) {
-      if (entry._tile) {
-        var tile = document.createElement('div');
-        tile.className = 'item tile client-tile span-' + entry.span;
-        tile.style.cssText = 'background:' + entry.color + ';order:' + i;
-        if (entry._row2) tile.style.gridRow = 'span 2';
-        sfg.appendChild(tile);
-      } else {
-        entry.el.style.display = ''; entry.el.style.order = i;
-        entry.el.style.gridColumn = 'span ' + getSpan(entry.poids);
-        entry.el.style.gridRow = '';
-        if (entry._heroSpan) { entry.el.style.gridColumn = 'span ' + entry._heroSpan; entry.el.style.gridRow = 'span 2'; }
-      }
-    });
+    // Shuffle for visual variety on each filter activation
+    var sfItems = selectionItems.slice();
+    for (var si = sfItems.length - 1; si > 0; si--) {
+      var sj = Math.floor(Math.random() * (si + 1));
+      var stmp = sfItems[si]; sfItems[si] = sfItems[sj]; sfItems[sj] = stmp;
+    }
+    var sfOrder = 0, sfIdx = 0;
+    var placeNext = function(span, row2) {
+      if (sfIdx >= sfItems.length) return;
+      var el = sfItems[sfIdx++];
+      el.style.display = ''; el.style.order = String(sfOrder++);
+      el.style.gridColumn = 'span ' + span;
+      el.style.gridRow = row2 ? 'span 2' : '';
+    };
+    while (sfIdx < sfItems.length) {
+      var sfRem = sfItems.length - sfIdx;
+      var sfR = Math.random();
+      if      (sfRem === 1)  { placeNext(12, false); }
+      else if (sfRem === 2)  { placeNext(6, false); placeNext(6, false); }
+      else if (sfR < 0.28)   { placeNext(8, true); placeNext(4, false); placeNext(4, false); }
+      else if (sfR < 0.56)   { placeNext(6, false); placeNext(6, false); }
+      else if (sfR < 0.82)   { placeNext(4, false); placeNext(4, false); placeNext(4, false); }
+      else                   { placeNext(3, false); placeNext(6, false); placeNext(3, false); }
+    }
     sfw.style.display = 'block';
   }
 
