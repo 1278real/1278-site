@@ -484,9 +484,10 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
     // Hero forced to row 0 or 1 (max)
     var sfRowCount   = Math.floor(sfItems.length / 2);
     var sfHeroPos    = sfRowCount > 0 ? Math.floor(Math.random() * Math.min(2, sfRowCount)) : -1;
-    var sfRowIdx     = 0;
-    var sfLastPat    = '';  // anti-consecutive: trio, quadroA, quadroB all block each other
-    var sfLastTileP  = -1; // last trio tile position (0=left,1=mid,2=right)
+    var sfRowIdx         = 0;
+    var sfLastPat        = '';  // anti-consecutive: trio, quadroA, quadroB all block each other
+    var sfLastTileP      = -1;  // last trio tile position (0=left,1=mid,2=right)
+    var sfLastColorRight = false; // true when last row ended with span-4 color at right (cols 9-12)
     while (sfIdx < sfItems.length) {
       var sfRem = sfItems.length - sfIdx;
       if (sfRem === 1) {
@@ -496,8 +497,10 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
         if (sfRowIdx === sfHeroPos) {
           // HERO (unique per layout): span-8 × 2 rows + 1 real span-4 + 1 forced color tile
           placeNext(8, true);
-          if (Math.random() < 0.5) { mkSfTile(4, false); placeNext(4, false); }
-          else                     { placeNext(4, false); mkSfTile(4, false); }
+          // If prev row had span-4 color at right, avoid hero color at top-right (would stack same-size)
+          var heroColorFirst = sfLastColorRight ? false : Math.random() < 0.5;
+          if (heroColorFirst) { mkSfTile(4, false); placeNext(4, false); sfLastColorRight = false; }
+          else                { placeNext(4, false); mkSfTile(4, false); sfLastColorRight = true; }
           sfLastPat = 'hero';
         } else {
           var sfR = Math.random();
@@ -515,24 +518,28 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
           if (sfPat === 'duo') {
             // DUO: 6+6, no tile
             placeNext(6, false); placeNext(6, false);
+            sfLastColorRight = false;
           } else if (sfPat === 'trio') {
-            // TRIO: tile at random position, never same as previous trio
+            // TRIO: tile at random position, never same as previous trio, never right if prev was right
             var tp;
-            do { tp = Math.floor(Math.random() * 3); } while (tp === sfLastTileP);
+            do { tp = Math.floor(Math.random() * 3); } while (tp === sfLastTileP || (sfLastColorRight && tp === 2));
             sfLastTileP = tp;
-            if      (tp === 0) { mkSfTile(4, false); placeNext(4, false); placeNext(4, false); }
-            else if (tp === 1) { placeNext(4, false); mkSfTile(4, false); placeNext(4, false); }
-            else               { placeNext(4, false); placeNext(4, false); mkSfTile(4, false); }
+            if      (tp === 0) { mkSfTile(4, false); placeNext(4, false); placeNext(4, false); sfLastColorRight = false; }
+            else if (tp === 1) { placeNext(4, false); mkSfTile(4, false); placeNext(4, false); sfLastColorRight = false; }
+            else               { placeNext(4, false); placeNext(4, false); mkSfTile(4, false); sfLastColorRight = true; }
           } else if (sfPat === 'mixte') {
-            // MIXTE: [tile-3] + 6 + 3  or  3 + 6 + [tile-3]
+            // MIXTE: [tile-3] + 6 + 3  or  3 + 6 + [tile-3] — span-3 ≠ span-4, no edge conflict
             if (Math.random() < 0.5) { mkSfTile(3, false); placeNext(6, false); placeNext(3, false); }
             else                     { placeNext(3, false); placeNext(6, false); mkSfTile(3, false); }
+            sfLastColorRight = false;
           } else if (sfPat === 'quadroA') {
-            // QUADRO A: tile-2 + item-4 + tile-2 + item-4
+            // QUADRO A: tile-2 + item-4 + tile-2 + item-4 — right edge is a project item
             mkSfTile(2, false); placeNext(4, false); mkSfTile(2, false); placeNext(4, false);
+            sfLastColorRight = false;
           } else {
-            // QUADRO B: item-4 + tile-2 + item-4 + tile-2
+            // QUADRO B: item-4 + tile-2 + item-4 + tile-2 — right edge is span-2, different size
             placeNext(4, false); mkSfTile(2, false); placeNext(4, false); mkSfTile(2, false);
+            sfLastColorRight = false;
           }
           sfLastPat = sfPat;
         }
