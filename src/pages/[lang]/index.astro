@@ -425,7 +425,7 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
     var items = Array.prototype.slice.call(sfg.querySelectorAll('.item:not(.tile)')).reverse();
     items.forEach(function(el) {
       var p = el._restoreParent, next = el._restoreNext;
-      el.style.order = ''; el.style.gridColumn = ''; el.style.gridRow = ''; el.style.display = '';
+      el.style.order = ''; el.style.gridColumn = ''; el.style.gridRow = ''; el.style.display = ''; el.classList.remove('sf-hero');
       if (p) {
         if (next && next.parentNode === p) { p.insertBefore(el, next); } else { p.appendChild(el); }
         el._restoreParent = null; el._restoreNext = null;
@@ -475,11 +475,12 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
       sfg.appendChild(t);
     };
     var placeNext = function(span, row2) {
-      if (sfIdx >= sfItems.length) { mkSfTile(span, row2); return; }
+      if (sfIdx >= sfItems.length) { mkSfTile(span, row2); return null; }
       var el = sfItems[sfIdx++];
       el.style.display = ''; el.style.order = String(sfOrder++);
       el.style.gridColumn = 'span ' + span;
       el.style.gridRow = row2 ? 'span 2' : 'span 1';
+      return el;
     };
     // Hero forced to row 0 or 1 (max)
     var sfRowCount   = Math.floor(sfItems.length / 2);
@@ -496,9 +497,10 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
       } else {
         if (sfRowIdx === sfHeroPos) {
           // HERO (unique per layout): span-8 × 2 rows + 1 real span-4 + 1 forced color tile
-          placeNext(8, true);
           // If prev row had span-4 color at right, avoid hero color at top-right (would stack same-size)
           var heroColorFirst = sfLastColorRight ? false : Math.random() < 0.5;
+          var heroEl = placeNext(8, true);
+          if (heroEl) heroEl.classList.add('sf-hero');
           if (heroColorFirst) { mkSfTile(4, false); placeNext(4, false); sfLastColorRight = false; }
           else                { placeNext(4, false); mkSfTile(4, false); sfLastColorRight = true; }
           sfLastPat = 'hero';
@@ -838,5 +840,9 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
     .span-2 { grid-column: span 1; }
     .item .titre { font-size: 13px; }
     .item .meta { font-size: 10px; }
+
+    /* Sélection mobile : 2 colonnes égales, seul le hero pleine largeur */
+    .selection-flat-grid .item { grid-column: span 1 !important; }
+    .selection-flat-grid .item.sf-hero { grid-column: span 2 !important; }
   }
 </style>
