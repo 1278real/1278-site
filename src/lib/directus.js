@@ -27,7 +27,7 @@ export async function getProjet(slug) {
 
 export async function getCategories() {
   return directus.request(readItems('portfolio_categories', {
-    sort: ['nom'],
+    sort: ['ordre'],
   }));
 }
 

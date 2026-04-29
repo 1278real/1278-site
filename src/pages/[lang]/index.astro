@@ -154,7 +154,7 @@ const yearGroups = [...yearMap.keys()]
   .map(yr => ({ annee: yr, items: mosaicLayout(yearMap.get(yr)) }));
 
 const selectionCat = categories.find(c => c.slug === 'selection');
-const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => a.nom.localeCompare(b.nom));
+const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => (a.ordre ?? 999) - (b.ordre ?? 999));
 ---
 
 <BaseLayout lang={lang} title="1·2·7·8 réalisation(s)" activePage="portfolio">
