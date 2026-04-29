@@ -466,6 +466,8 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
         sfg.appendChild(tile);
       } else {
         entry.el.style.display = ''; entry.el.style.order = i;
+        entry.el.style.gridColumn = 'span ' + getSpan(entry.poids);
+        entry.el.style.gridRow = '';
         if (entry._heroSpan) { entry.el.style.gridColumn = 'span ' + entry._heroSpan; entry.el.style.gridRow = 'span 2'; }
       }
     });
