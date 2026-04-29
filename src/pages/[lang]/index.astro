@@ -481,15 +481,37 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
       el.style.gridColumn = 'span ' + span;
       el.style.gridRow = row2 ? 'span 2' : 'span 1';
     };
+    // Pre-determine the position of the unique hero row among 2-item rows
+    var sfRowCount = Math.floor(sfItems.length / 2);
+    var sfHeroPos  = sfRowCount > 0 ? Math.floor(Math.random() * sfRowCount) : -1;
+    var sfRowIdx   = 0;
     while (sfIdx < sfItems.length) {
       var sfRem = sfItems.length - sfIdx;
-      var sfR = Math.random();
-      if      (sfRem === 1)  { mkSfTile(3, false); placeNext(6, false); mkSfTile(3, false); }
-      else if (sfRem === 2)  { placeNext(6, false); placeNext(6, false); }
-      else if (sfR < 0.28)   { placeNext(8, true); placeNext(4, false); placeNext(4, false); }
-      else if (sfR < 0.56)   { placeNext(6, false); placeNext(6, false); }
-      else if (sfR < 0.82)   { placeNext(4, false); placeNext(4, false); placeNext(4, false); }
-      else                   { placeNext(3, false); placeNext(6, false); placeNext(3, false); }
+      if (sfRem === 1) {
+        // Last lone item: flanked by 2 color tiles
+        mkSfTile(3, false); placeNext(6, false); mkSfTile(3, false);
+      } else {
+        if (sfRowIdx === sfHeroPos) {
+          // HERO (unique per layout): span-8 × 2 rows + 1 real span-4 + 1 forced color tile
+          placeNext(8, true);
+          if (Math.random() < 0.5) { mkSfTile(4, false); placeNext(4, false); }
+          else                     { placeNext(4, false); mkSfTile(4, false); }
+        } else {
+          var sfR = Math.random();
+          if (sfR < 0.35) {
+            // DUO: 6+6, no tile — clean rhythm break
+            placeNext(6, false); placeNext(6, false);
+          } else if (sfR < 0.68) {
+            // TRIO: 4 + [tile] + 4
+            placeNext(4, false); mkSfTile(4, false); placeNext(4, false);
+          } else {
+            // MIXTE: [tile-3] + 6 + 3  or  3 + 6 + [tile-3]
+            if (Math.random() < 0.5) { mkSfTile(3, false); placeNext(6, false); placeNext(3, false); }
+            else                     { placeNext(3, false); placeNext(6, false); mkSfTile(3, false); }
+          }
+        }
+        sfRowIdx++;
+      }
     }
     sfw.style.display = 'block';
   }
