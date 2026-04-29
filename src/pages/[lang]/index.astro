@@ -456,7 +456,7 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
       el.style.display = 'none'; el.style.order = ''; el.style.gridColumn = ''; el.style.gridRow = '';
       sfg.appendChild(el);
     });
-    var layout = mosaicLayout(selectionItems.map(function(el) { return { poids: Math.ceil(Math.random() * 4), el: el }; }));
+    var layout = mosaicLayout(selectionItems.map(function(el) { return { poids: Math.floor(Math.random() * 3) + 2, el: el }; }));
     layout.forEach(function(entry, i) {
       if (entry._tile) {
         var tile = document.createElement('div');
