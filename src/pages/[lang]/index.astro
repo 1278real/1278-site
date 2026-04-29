@@ -462,18 +462,29 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
       var sj = Math.floor(Math.random() * (si + 1));
       var stmp = sfItems[si]; sfItems[si] = sfItems[sj]; sfItems[sj] = stmp;
     }
-    var sfOrder = 0, sfIdx = 0;
+    var sfOrder = 0, sfIdx = 0, sfTc1 = -1, sfTc2 = -1;
+    var mkSfTile = function(span, row2) {
+      var idx;
+      do { idx = Math.floor(Math.random() * PALETTE.length); }
+      while (idx === sfTc1 || (PALETTE.length > 2 && idx === sfTc2));
+      sfTc2 = sfTc1; sfTc1 = idx;
+      var t = document.createElement('div');
+      t.className = 'item tile client-tile span-' + span;
+      t.style.cssText = 'background:' + PALETTE[idx] + ';order:' + String(sfOrder++);
+      if (row2) t.style.gridRow = 'span 2';
+      sfg.appendChild(t);
+    };
     var placeNext = function(span, row2) {
-      if (sfIdx >= sfItems.length) return;
+      if (sfIdx >= sfItems.length) { mkSfTile(span, row2); return; }
       var el = sfItems[sfIdx++];
       el.style.display = ''; el.style.order = String(sfOrder++);
       el.style.gridColumn = 'span ' + span;
-      el.style.gridRow = row2 ? 'span 2' : '';
+      el.style.gridRow = row2 ? 'span 2' : 'span 1';
     };
     while (sfIdx < sfItems.length) {
       var sfRem = sfItems.length - sfIdx;
       var sfR = Math.random();
-      if      (sfRem === 1)  { placeNext(12, false); }
+      if      (sfRem === 1)  { mkSfTile(3, false); placeNext(6, false); mkSfTile(3, false); }
       else if (sfRem === 2)  { placeNext(6, false); placeNext(6, false); }
       else if (sfR < 0.28)   { placeNext(8, true); placeNext(4, false); placeNext(4, false); }
       else if (sfR < 0.56)   { placeNext(6, false); placeNext(6, false); }
