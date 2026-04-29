@@ -8,15 +8,22 @@
 
 ## Features courtes (1–3h)
 
-- [ ] Page Contact — coordonnées + formulaire simple
+- [x] Page Contact — coordonnées + formulaire simple ✓ fait
 - [x] Responsive mobile — grille 12 col et nav à adapter sous 768px ✓ fait
-- [ ] Page Flashback — galerie archives, filtre par décennie
-- [ ] Embed YouTube — champ `url_youtube` dans Directus ; sur la page détail : lecteur intégré ; sur la grille : preview au hover (option)
+- [x] Embed YouTube — lecteur intégré page détail + preview hover sur la grille ✓ fait
 
 ## Chantiers (> 3h)
 
-- [ ] Bilinguisme FR/EN — routing + champs `titre_en` / `description_en`
+- [x] Bilinguisme FR/EN — routing + champs `titre_en` / `description_en` ✓ fait
 - [ ] Transitions de page — View Transitions API Astro (index ↔ projet)
+- [ ] Upgrade Directus — pour avoir la duplication de ligne directement dans les projets (fonctionnalité disponible dans les versions récentes)
+
+## Avant diffusion
+
+- [ ] Repasse des traductions EN — vérifier le ton et la cohérence sur toutes les pages (portfolio, flashback, contact, pages projet)
+- [ ] Retours collègue — voir ci-dessous :
+  - → "côté CV peu digeste" : déjà adressé par le filtre Sélection (landing curatée par défaut) — à vérifier si c'est lisible sur mobile
+  - → "classement par importance plutôt que par année" : dans les vues filtrées (hors Sélection/Tout), trier par poids et masquer les séparateurs d'année pour ne pas trahir l'ancienneté d'une catégorie
 
 ## Quand tu es prêt à basculer live
 

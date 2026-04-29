@@ -181,6 +181,9 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
       </div>
     </div>
   )}
+  <div class="selection-flat-wrapper">
+    <div class="grid selection-flat-grid"></div>
+  </div>
   {yearGroups.map(group => (
     <div class="year-block" data-annee={group.annee}>
       <div class="year-sep">
@@ -415,6 +418,60 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
     });
   }
 
+  function restoreFromSelectionFlat() {
+    var sfg = wrapper.querySelector('.selection-flat-grid');
+    var sfw = wrapper.querySelector('.selection-flat-wrapper');
+    if (!sfw || sfw.style.display === 'none') return;
+    var items = Array.prototype.slice.call(sfg.querySelectorAll('.item:not(.tile)')).reverse();
+    items.forEach(function(el) {
+      var p = el._restoreParent, next = el._restoreNext;
+      el.style.order = ''; el.style.gridColumn = ''; el.style.gridRow = ''; el.style.display = '';
+      if (p) {
+        if (next && next.parentNode === p) { p.insertBefore(el, next); } else { p.appendChild(el); }
+        el._restoreParent = null; el._restoreNext = null;
+      }
+    });
+    removeClientTiles(sfg);
+    sfw.style.display = 'none';
+    allYearBlocks().forEach(function(block) { block.style.display = ''; });
+  }
+
+  function applySelectionFlatLayout() {
+    restoreFromSelectionFlat();
+    var sfg = wrapper.querySelector('.selection-flat-grid');
+    var sfw = wrapper.querySelector('.selection-flat-wrapper');
+    var selectionItems = [];
+    allYearBlocks().forEach(function(block) {
+      block.style.display = 'none';
+      var g = block.querySelector('.grid');
+      Array.prototype.slice.call(g.querySelectorAll('.item:not(.tile)')).forEach(function(el) {
+        if ((el.getAttribute('data-cats') || '').split(',').indexOf('selection') !== -1) {
+          el._restoreParent = g; el._restoreNext = el.nextSibling;
+          selectionItems.push(el);
+        }
+      });
+    });
+    removeClientTiles(sfg);
+    selectionItems.forEach(function(el) {
+      el.style.display = 'none'; el.style.order = ''; el.style.gridColumn = ''; el.style.gridRow = '';
+      sfg.appendChild(el);
+    });
+    var layout = mosaicLayout(selectionItems.map(function(el) { return { poids: el.dataset.poids, el: el }; }));
+    layout.forEach(function(entry, i) {
+      if (entry._tile) {
+        var tile = document.createElement('div');
+        tile.className = 'item tile client-tile span-' + entry.span;
+        tile.style.cssText = 'background:' + entry.color + ';order:' + i;
+        if (entry._row2) tile.style.gridRow = 'span 2';
+        sfg.appendChild(tile);
+      } else {
+        entry.el.style.display = ''; entry.el.style.order = i;
+        if (entry._heroSpan) { entry.el.style.gridColumn = 'span ' + entry._heroSpan; entry.el.style.gridRow = 'span 2'; }
+      }
+    });
+    sfw.style.display = '';
+  }
+
   var _filterTimer = null;
   var _cleanupTimer = null;
 
@@ -438,6 +495,7 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
   }
 
   function applyPerYear(cat) {
+    if (cat === 'selection') { applySelectionFlatLayout(); return; }
     allYearBlocks().forEach(function(block) {
       var g = block.querySelector('.grid');
       var blockItems = Array.prototype.slice.call(g.querySelectorAll('.item:not(.tile)'));
@@ -463,6 +521,7 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
     var willBeSelection = cat === 'selection';
 
     if (!animate) {
+      if (wasSelection && !willBeSelection) { restoreFromSelectionFlat(); }
       wrapper.classList.toggle('mode-selection', willBeSelection);
       if (cat === '') { restoreServerLayout(); }
       else { applyPerYear(cat); }
@@ -502,6 +561,8 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
 
     _filterTimer = setTimeout(function() {
       _filterTimer = null;
+      // Restore flat grid items first so year-blocks are populated before pre-show
+      if (wasSelection && !willBeSelection) { restoreFromSelectionFlat(); }
       // Pre-show year-seps at opacity 0 before class toggle (going FROM selection)
       if (wasSelection && !willBeSelection) {
         wrapper.querySelectorAll('.year-sep').forEach(function(sep) {
@@ -645,6 +706,7 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
   .item .titre { font-size: 16px; font-weight: 700; color: #fff; font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; }
   .item .meta { font-size: 11px; color: #7D8893; margin-top: 4px; }
 
+  .selection-flat-wrapper { display: none; }
   .global-clients { display: none; overflow: hidden; padding: 8px 9px; mask-image: linear-gradient(to right, transparent, black 60px, black calc(100% - 60px), transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 60px, black calc(100% - 60px), transparent); }
   .portfolio-wrapper.mode-selection .global-clients { display: block; }
   .portfolio-wrapper.mode-selection .year-sep { display: none; }
