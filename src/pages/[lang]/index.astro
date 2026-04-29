@@ -482,9 +482,11 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
       el.style.gridRow = row2 ? 'span 2' : 'span 1';
     };
     // Pre-determine the position of the unique hero row among 2-item rows
-    var sfRowCount = Math.floor(sfItems.length / 2);
-    var sfHeroPos  = sfRowCount > 0 ? Math.floor(Math.random() * sfRowCount) : -1;
-    var sfRowIdx   = 0;
+    var sfRowCount   = Math.floor(sfItems.length / 2);
+    var sfHeroPos    = sfRowCount > 0 ? Math.floor(Math.random() * sfRowCount) : -1;
+    var sfRowIdx     = 0;
+    var sfLastPat    = '';   // anti-consecutive-trio
+    var sfLastTileP  = -1;  // last trio tile position (0=left,1=mid,2=right)
     while (sfIdx < sfItems.length) {
       var sfRem = sfItems.length - sfIdx;
       if (sfRem === 1) {
@@ -496,19 +498,36 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
           placeNext(8, true);
           if (Math.random() < 0.5) { mkSfTile(4, false); placeNext(4, false); }
           else                     { placeNext(4, false); mkSfTile(4, false); }
+          sfLastPat = 'hero';
         } else {
           var sfR = Math.random();
-          if (sfR < 0.35) {
+          // Exclude trio if previous row was also trio (anti-repeat)
+          var sfPat;
+          if (sfLastPat !== 'trio') {
+            sfPat = sfR < 0.28 ? 'duo' : sfR < 0.52 ? 'trio' : sfR < 0.76 ? 'mixte' : 'quadro';
+          } else {
+            sfPat = sfR < 0.35 ? 'duo' : sfR < 0.68 ? 'mixte' : 'quadro';
+          }
+          if (sfPat === 'duo') {
             // DUO: 6+6, no tile — clean rhythm break
             placeNext(6, false); placeNext(6, false);
-          } else if (sfR < 0.68) {
-            // TRIO: 4 + [tile] + 4
-            placeNext(4, false); mkSfTile(4, false); placeNext(4, false);
-          } else {
+          } else if (sfPat === 'trio') {
+            // TRIO: tile at random position, never same as previous trio
+            var tp;
+            do { tp = Math.floor(Math.random() * 3); } while (tp === sfLastTileP);
+            sfLastTileP = tp;
+            if      (tp === 0) { mkSfTile(4, false); placeNext(4, false); placeNext(4, false); }
+            else if (tp === 1) { placeNext(4, false); mkSfTile(4, false); placeNext(4, false); }
+            else               { placeNext(4, false); placeNext(4, false); mkSfTile(4, false); }
+          } else if (sfPat === 'mixte') {
             // MIXTE: [tile-3] + 6 + 3  or  3 + 6 + [tile-3]
             if (Math.random() < 0.5) { mkSfTile(3, false); placeNext(6, false); placeNext(3, false); }
             else                     { placeNext(3, false); placeNext(6, false); mkSfTile(3, false); }
+          } else {
+            // QUADRO: tile-2 + item-4 + tile-2 + item-4
+            mkSfTile(2, false); placeNext(4, false); mkSfTile(2, false); placeNext(4, false);
           }
+          sfLastPat = sfPat;
         }
         sfRowIdx++;
       }
