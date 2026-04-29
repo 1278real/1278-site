@@ -469,7 +469,7 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
         if (entry._heroSpan) { entry.el.style.gridColumn = 'span ' + entry._heroSpan; entry.el.style.gridRow = 'span 2'; }
       }
     });
-    sfw.style.display = '';
+    sfw.style.display = 'block';
   }
 
   var _filterTimer = null;
