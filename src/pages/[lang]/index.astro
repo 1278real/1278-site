@@ -481,12 +481,12 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
       el.style.gridColumn = 'span ' + span;
       el.style.gridRow = row2 ? 'span 2' : 'span 1';
     };
-    // Pre-determine the position of the unique hero row among 2-item rows
+    // Hero forced to row 0 or 1 (max)
     var sfRowCount   = Math.floor(sfItems.length / 2);
-    var sfHeroPos    = sfRowCount > 0 ? Math.floor(Math.random() * sfRowCount) : -1;
+    var sfHeroPos    = sfRowCount > 0 ? Math.floor(Math.random() * Math.min(2, sfRowCount)) : -1;
     var sfRowIdx     = 0;
-    var sfLastPat    = '';   // anti-consecutive-trio
-    var sfLastTileP  = -1;  // last trio tile position (0=left,1=mid,2=right)
+    var sfLastPat    = '';  // anti-consecutive: trio, quadroA, quadroB all block each other
+    var sfLastTileP  = -1; // last trio tile position (0=left,1=mid,2=right)
     while (sfIdx < sfItems.length) {
       var sfRem = sfItems.length - sfIdx;
       if (sfRem === 1) {
@@ -501,15 +501,19 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
           sfLastPat = 'hero';
         } else {
           var sfR = Math.random();
-          // Exclude trio if previous row was also trio (anti-repeat)
+          var sfIsQuadro = sfLastPat === 'quadroA' || sfLastPat === 'quadroB';
           var sfPat;
-          if (sfLastPat !== 'trio') {
-            sfPat = sfR < 0.28 ? 'duo' : sfR < 0.52 ? 'trio' : sfR < 0.76 ? 'mixte' : 'quadro';
+          if (sfLastPat === 'trio') {
+            // after trio: no trio
+            sfPat = sfR < 0.30 ? 'duo' : sfR < 0.55 ? 'mixte' : sfR < 0.77 ? 'quadroA' : 'quadroB';
+          } else if (sfIsQuadro) {
+            // after any quadro: no quadro of any kind
+            sfPat = sfR < 0.35 ? 'duo' : sfR < 0.65 ? 'trio' : 'mixte';
           } else {
-            sfPat = sfR < 0.35 ? 'duo' : sfR < 0.68 ? 'mixte' : 'quadro';
+            sfPat = sfR < 0.22 ? 'duo' : sfR < 0.42 ? 'trio' : sfR < 0.62 ? 'mixte' : sfR < 0.81 ? 'quadroA' : 'quadroB';
           }
           if (sfPat === 'duo') {
-            // DUO: 6+6, no tile — clean rhythm break
+            // DUO: 6+6, no tile
             placeNext(6, false); placeNext(6, false);
           } else if (sfPat === 'trio') {
             // TRIO: tile at random position, never same as previous trio
@@ -523,9 +527,12 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
             // MIXTE: [tile-3] + 6 + 3  or  3 + 6 + [tile-3]
             if (Math.random() < 0.5) { mkSfTile(3, false); placeNext(6, false); placeNext(3, false); }
             else                     { placeNext(3, false); placeNext(6, false); mkSfTile(3, false); }
-          } else {
-            // QUADRO: tile-2 + item-4 + tile-2 + item-4
+          } else if (sfPat === 'quadroA') {
+            // QUADRO A: tile-2 + item-4 + tile-2 + item-4
             mkSfTile(2, false); placeNext(4, false); mkSfTile(2, false); placeNext(4, false);
+          } else {
+            // QUADRO B: item-4 + tile-2 + item-4 + tile-2
+            placeNext(4, false); mkSfTile(2, false); placeNext(4, false); mkSfTile(2, false);
           }
           sfLastPat = sfPat;
         }
