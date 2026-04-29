@@ -242,7 +242,7 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
 
   var PAGEBASE = BASE + LANG + '/';
 
-  var PALETTE = ['#1CC9FE', '#0D667F', '#7D8893'];
+  var PALETTE = ['#1CC9FE', '#0D667F', '#4A7EA0', '#91FBFE', '#6D6E71', '#7D8893', '#D1D2D4'];
 
   function getSpan(poids) {
     var p = Number(poids);
@@ -717,8 +717,9 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
   .year-left { font-family: 'stenciletta-left', 'Barlow Condensed', sans-serif; color: #1CC9FE; }
   .year-right { font-family: 'stenciletta-right', 'Barlow Condensed', sans-serif; color: #7D8893; position: absolute; top: 0; left: 0; }
   .sep-clients { overflow: hidden; flex: 1; mask-image: linear-gradient(to right, transparent, black 60px, black calc(100% - 60px), transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 60px, black calc(100% - 60px), transparent); }
-  .sep-track { display: flex; gap: 28px; align-items: center; width: max-content; animation: scroll-clients 28s linear infinite; will-change: transform; }
-  .sep-track img { height: 14px; width: auto; max-width: 80px; min-width: 24px; opacity: 0.5; transition: opacity .2s; flex-shrink: 0; }
+  .sep-track { display: flex; align-items: center; width: max-content; animation: scroll-clients 28s linear infinite; will-change: transform; }
+  .sep-track img { height: 14px; width: auto; max-width: 80px; min-width: 24px; opacity: 0.5; transition: opacity .2s; flex-shrink: 0; margin-right: 28px; }
+  .sep-track span { margin-right: 28px; }
   .sep-track img:hover { opacity: 0.9; }
   @keyframes scroll-clients { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
