@@ -10,7 +10,7 @@ export const ui = {
     contact: {
       phone: 'Téléphone',
       email: 'Email',
-      baseline: '<span class="b1">Du plateau au pixel</span><span class="bsep"> : </span><span class="b2">mettre à profit les </span><span class="b3">connaissances techniques</span><span class="b2"> acquises </span><span class="b1">&amp;</span><span class="b2"> les </span><span class="b3">collaborations passées</span><span class="b2"> </span><span class="bsep">pour servir </span><span class="b1">les projets actuels</span>',
+      baseline: '<span class="b1">du plateau au pixel :</span> <span class="b2">mettre à profit les connaissances techniques acquises &amp; les collaborations passées pour</span> <span class="b3">servir les projets actuels</span>',
     },
     flashback: {
       subtitle: 'Avant de créer 1·2·7·8 réalisation(s)…',
@@ -60,7 +60,7 @@ export const ui = {
     contact: {
       phone: 'Phone',
       email: 'Email',
-      baseline: '<span class="b1">From stage to pixel</span><span class="bsep"> : </span><span class="b2">leveraging </span><span class="b3">technical expertise</span><span class="b2"> </span><span class="b1">&amp;</span><span class="b2"> </span><span class="b3">past collaborations</span><span class="b2"> </span><span class="bsep">to serve </span><span class="b1">present projects</span>',
+      baseline: '<span class="b1">from stage to pixel:</span> <span class="b2">leveraging technical expertise &amp; past collaborations to</span> <span class="b3">serve present projects</span>',
     },
     flashback: {
       subtitle: 'Before creating 1·2·7·8 réalisation(s)…',
