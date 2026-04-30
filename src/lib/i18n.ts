@@ -7,7 +7,11 @@ export const ui = {
     portfolio: { showAll: 'Tout afficher' },
     categories: {} as Record<string, string>,
     projet: { back: '← Portfolio' },
-    contact: { phone: 'Téléphone', email: 'Email' },
+    contact: {
+      phone: 'Téléphone',
+      email: 'Email',
+      baseline: '<span class="b1">Du plateau au pixel</span><span class="bsep"> : </span><span class="b2">mettre à profit les </span><span class="b3">connaissances techniques</span><span class="b2"> acquises </span><span class="b1">&amp;</span><span class="b2"> les </span><span class="b3">collaborations passées</span><span class="b2"> </span><span class="bsep">pour servir </span><span class="b1">les projets actuels</span>',
+    },
     flashback: {
       subtitle: 'Avant de créer 1·2·7·8 réalisation(s)…',
       timeline: [
@@ -53,7 +57,11 @@ export const ui = {
       sports: 'Sports',
     } as Record<string, string>,
     projet: { back: '← Portfolio' },
-    contact: { phone: 'Phone', email: 'Email' },
+    contact: {
+      phone: 'Phone',
+      email: 'Email',
+      baseline: '<span class="b1">From stage to pixel</span><span class="bsep"> : </span><span class="b2">leveraging </span><span class="b3">technical expertise</span><span class="b2"> </span><span class="b1">&amp;</span><span class="b2"> </span><span class="b3">past collaborations</span><span class="b2"> </span><span class="bsep">to serve </span><span class="b1">present projects</span>',
+    },
     flashback: {
       subtitle: 'Before creating 1·2·7·8 réalisation(s)…',
       timeline: [

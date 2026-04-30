@@ -21,6 +21,7 @@ const t = ui[lang];
         <span class="title-left">Contact</span>
         <span class="title-right">Contact</span>
       </div>
+      <div class="baseline" set:html={t.contact.baseline} />
     </div>
 
     <div class="links-col">
@@ -57,29 +58,40 @@ const t = ui[lang];
 
   .contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; width: 100%; align-items: start; }
 
-  .title-col { display: flex; align-items: flex-start; padding-top: 4px; }
+  .title-col { display: flex; flex-direction: column; align-items: flex-start; padding-top: 4px; gap: 28px; }
   .page-title { position: relative; line-height: 0.9; }
   .title-left  { display: block; font-family: 'stenciletta-left',  'Barlow Condensed', sans-serif; font-size: clamp(72px, 10vw, 140px); font-weight: 700; letter-spacing: .02em; color: #1CC9FE; }
   .title-right { display: block; font-family: 'stenciletta-right', 'Barlow Condensed', sans-serif; font-size: clamp(72px, 10vw, 140px); font-weight: 700; letter-spacing: .02em; color: #7D8893; position: absolute; top: 0; left: 0; }
 
-  .links-col { display: flex; flex-direction: column; gap: 0; }
+  .baseline { font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; font-size: clamp(18px, 2vw, 26px); line-height: 1.35; letter-spacing: .02em; max-width: 560px; }
+  .baseline .b1 { color: #1CC9FE; }
+  .baseline .b2 { color: #4A7EA0; }
+  .baseline .b3 { color: #91FBFE; }
+  .baseline .bsep { color: #7D8893; }
+
+  .links-col { display: flex; flex-direction: column; gap: 0; align-items: stretch; text-align: right; }
   .contact-lines { display: flex; flex-direction: column; }
-  .contact-line { display: flex; flex-direction: column; gap: 5px; padding: 14px 0 14px 12px; border-bottom: 0.5px solid rgba(255,255,255,0.07); border-left: 2px solid transparent; text-decoration: none; color: inherit; transition: color .15s, border-color .15s; }
+  .contact-line { display: flex; flex-direction: column; gap: 5px; padding: 14px 12px 14px 0; border-bottom: 0.5px solid rgba(255,255,255,0.07); border-right: 2px solid transparent; text-decoration: none; color: inherit; transition: color .15s, border-color .15s; }
   .contact-line:first-child { border-top: 0.5px solid rgba(255,255,255,0.07); }
-  .contact-line:hover { color: #1CC9FE; border-left-color: #1CC9FE; }
+  .contact-line:hover { color: #1CC9FE; border-right-color: #1CC9FE; }
   .label { font-size: 9px; letter-spacing: .16em; color: #7D8893; text-transform: uppercase; }
   .value { font-size: 24px; font-weight: 700; letter-spacing: .01em; }
   .contact-emails { cursor: default; }
-  .contact-emails:hover { color: inherit; border-left-color: transparent; }
+  .contact-emails:hover { color: inherit; border-right-color: transparent; }
   .contact-emails .value { text-decoration: none; color: inherit; transition: color .15s; display: block; }
   .contact-emails .value-secondary { color: #7D8893; font-weight: 400; }
   .contact-emails .value:hover { color: #1CC9FE; }
 
-  .legal { margin-top: 32px; font-size: 10px; color: #333; line-height: 1.7; padding-left: 12px; }
+  .legal { margin-top: 32px; font-size: 12px; color: #555; line-height: 1.7; padding-right: 12px; }
 
   @media (max-width: 768px) {
     .contact-layout { grid-template-columns: 1fr; gap: 32px; }
     .title-left, .title-right { font-size: clamp(56px, 18vw, 96px); }
+    .links-col { text-align: left; }
+    .contact-line { padding: 14px 0 14px 12px; border-right: 0; border-left: 2px solid transparent; }
+    .contact-line:hover { border-right-color: transparent; border-left-color: #1CC9FE; }
+    .contact-emails:hover { border-left-color: transparent; }
+    .legal { padding-right: 0; padding-left: 12px; }
   }
 
   @media (max-width: 640px) {
