@@ -14,6 +14,12 @@ const t = ui[lang];
 const [projetsRaw, categories, clients] = await Promise.all([getProjets(), getCategories(), getClients()]);
 const base = import.meta.env.BASE_URL;
 
+const tickerCount = clients && clients.length > 0
+  ? Math.max(2, 2 * Math.ceil(40 / clients.length))
+  : 2;
+const tickerArr = clients ? Array.from({ length: tickerCount }, () => clients).flat() : [];
+const tickerDurationS = 14 * tickerCount;
+
 const getSpan = (poids) => {
   const p = Number(poids);
   if (p >= 4) return 8;
@@ -172,8 +178,8 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
 <div class="portfolio-wrapper">
   {clients && clients.length > 0 && (
     <div class="global-clients">
-      <div class="sep-track">
-        {[...clients, ...clients].map((c) => (
+      <div class="sep-track" style={`animation-duration: ${tickerDurationS}s`}>
+        {tickerArr.map((c) => (
           c.logo
             ? <img src={imageUrl(c.logo, 120)} alt={c.nom} title={c.nom} />
             : <span>{c.nom}</span>
@@ -185,8 +191,8 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
     <div class="grid selection-flat-grid"></div>
     {clients && clients.length > 0 && (
       <div class="global-clients global-clients-bottom">
-        <div class="sep-track sep-track-reverse">
-          {[...clients, ...clients].map((c) => (
+        <div class="sep-track sep-track-reverse" style={`animation-duration: ${tickerDurationS}s`}>
+          {tickerArr.map((c) => (
             c.logo
               ? <img src={imageUrl(c.logo, 120)} alt={c.nom} title={c.nom} />
               : <span>{c.nom}</span>
@@ -204,8 +210,8 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
         </div>
         {clients && clients.length > 0 && (
           <div class="sep-clients">
-            <div class="sep-track">
-              {[...clients, ...clients].map((c) => (
+            <div class="sep-track" style={`animation-duration: ${tickerDurationS}s`}>
+              {tickerArr.map((c) => (
                 c.logo
                   ? <img src={imageUrl(c.logo, 120)} alt={c.nom} title={c.nom} />
                   : <span>{c.nom}</span>
