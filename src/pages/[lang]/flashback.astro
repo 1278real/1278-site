@@ -11,41 +11,45 @@ const { lang } = Astro.params as { lang: Lang };
 const t = ui[lang];
 const base = import.meta.env.BASE_URL;
 
-const standalone = [
+type App = { name: string; icon: string; ios: string; macos?: string; android?: string };
+
+const standalone: App[] = [
   {
     name: 'UNDIApp',
     icon: `${base}apps/undia.png`,
-    ios: 'https://apps.apple.com/us/app/undiapp-v4/id1577959494',
+    ios: 'https://apps.apple.com/fr/app/undiapp-v4/id1577959494',
     android: 'https://play.google.com/store/apps/details?id=com.by1278real.undiapp',
   },
   {
     name: 'Mes Piges',
     icon: `${base}apps/mespiges.png`,
-    ios: 'https://apps.apple.com/us/app/mes-piges/id1435733840',
+    ios: 'https://apps.apple.com/fr/app/mes-piges/id1435733840',
   },
 ];
 
-const gthPack = [
+const gthPack: App[] = [
   {
     name: 'gtHELPer',
     icon: `${base}apps/gthelper.png`,
-    ios: 'https://apps.apple.com/us/app/gthelper/id1622817375',
+    ios: 'https://apps.apple.com/fr/app/gthelper/id1622817375',
     android: 'https://play.google.com/store/apps/details?id=com.by1278real.gthphelper',
   },
   {
     name: 'gthPROD',
     icon: `${base}apps/gthprod.png`,
-    ios: 'https://apps.apple.com/us/app/gthprod/id6744239575',
+    ios: 'https://apps.apple.com/fr/app/gthprod/id6744239575',
+    macos: 'https://apps.apple.com/fr/app/gthprod/id6744239575',
   },
   {
-    name: 'gTEAMShp',
+    name: 'gTEAMhp',
     icon: `${base}apps/gteamshp.png`,
-    ios: 'https://apps.apple.com/us/app/gteamshp/id6739618102',
+    ios: 'https://apps.apple.com/fr/app/gteamshp/id6739618102',
   },
   {
     name: 'gtHEATSp',
     icon: `${base}apps/gtheatsp.png`,
-    ios: 'https://apps.apple.com/us/app/gtheatsp/id6738629603',
+    ios: 'https://apps.apple.com/fr/app/gtheatsp/id6738629603',
+    macos: 'https://apps.apple.com/fr/app/gtheatsp/id6738629603',
     android: 'https://play.google.com/store/apps/details?id=app.u1278.gthp_heats',
   },
 ];
@@ -82,6 +86,7 @@ const gthPack = [
         <span class="app-name">{app.name}</span>
         <div class="app-stores">
           <a href={app.ios} target="_blank" rel="noopener">iOS</a>
+          {app.macos && <a href={app.macos} target="_blank" rel="noopener">macOS</a>}
           {app.android && <a href={app.android} target="_blank" rel="noopener">Android</a>}
         </div>
       </div>
