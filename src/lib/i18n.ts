@@ -3,7 +3,7 @@ export type Lang = typeof languages[number];
 
 export const ui = {
   fr: {
-    nav: { portfolio: 'Portfolio', flashback: 'Flashback', contact: 'Contact', lang: 'EN' },
+    nav: { portfolio: 'Portfolio', flashback: 'Timeline', contact: 'Contact', lang: 'EN' },
     portfolio: { showAll: 'Tout afficher' },
     categories: {} as Record<string, string>,
     projet: { back: '← Portfolio' },
@@ -13,7 +13,9 @@ export const ui = {
       baseline: '<span class="b1">du plateau au pixel :</span><br><span class="b2">mettre à profit les <span class="b4">connaissances techniques</span> acquises</span><br><span class="b2">&amp; les <span class="b4">collaborations</span> passées pour</span><br><span class="b3">servir les projets actuels</span>',
     },
     flashback: {
-      subtitle: 'Avant de créer 1·2·7·8 réalisation(s)…',
+      subtitle: '1·2·7·8 joue avec les pixels',
+      appsTitle: 'Applications mobiles',
+      appsPack: 'Pack gth',
       timeline: [
         {
           annee: '2000',
@@ -44,7 +46,7 @@ export const ui = {
     },
   },
   en: {
-    nav: { portfolio: 'Portfolio', flashback: 'Flashback', contact: 'Contact', lang: 'FR' },
+    nav: { portfolio: 'Portfolio', flashback: 'Timeline', contact: 'Contact', lang: 'FR' },
     portfolio: { showAll: 'Show all' },
     categories: {
       selection: 'Selection',
@@ -63,7 +65,9 @@ export const ui = {
       baseline: '<span class="b1">from stage to pixel:</span><br><span class="b2">leveraging <span class="b4">technical expertise</span></span><br><span class="b2">&amp; past <span class="b4">collaborations</span> to</span><br><span class="b3">serve present projects</span>',
     },
     flashback: {
-      subtitle: 'Before creating 1·2·7·8 réalisation(s)…',
+      subtitle: '1·2·7·8 plays with pixels',
+      appsTitle: 'Mobile apps',
+      appsPack: 'gth Pack',
       timeline: [
         {
           annee: '2000',

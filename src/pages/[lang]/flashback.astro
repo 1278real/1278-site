@@ -9,12 +9,52 @@ export function getStaticPaths() {
 
 const { lang } = Astro.params as { lang: Lang };
 const t = ui[lang];
+const base = import.meta.env.BASE_URL;
+
+const standalone = [
+  {
+    name: 'UNDIApp',
+    icon: `${base}apps/undia.png`,
+    ios: 'https://apps.apple.com/us/app/undiapp-v4/id1577959494',
+    android: 'https://play.google.com/store/apps/details?id=com.by1278real.undiapp',
+  },
+  {
+    name: 'Mes Piges',
+    icon: `${base}apps/mespiges.png`,
+    ios: 'https://apps.apple.com/us/app/mes-piges/id1435733840',
+  },
+];
+
+const gthPack = [
+  {
+    name: 'gtHELPer',
+    icon: `${base}apps/gthelper.png`,
+    ios: 'https://apps.apple.com/us/app/gthelper/id1622817375',
+    android: 'https://play.google.com/store/apps/details?id=com.by1278real.gthphelper',
+  },
+  {
+    name: 'gthPROD',
+    icon: `${base}apps/gthprod.png`,
+    ios: 'https://apps.apple.com/us/app/gthprod/id6744239575',
+  },
+  {
+    name: 'gTEAMShp',
+    icon: `${base}apps/gteamshp.png`,
+    ios: 'https://apps.apple.com/us/app/gteamshp/id6739618102',
+  },
+  {
+    name: 'gtHEATSp',
+    icon: `${base}apps/gtheatsp.png`,
+    ios: 'https://apps.apple.com/us/app/gtheatsp/id6738629603',
+    android: 'https://play.google.com/store/apps/details?id=app.u1278.gthp_heats',
+  },
+];
 ---
 
-<BaseLayout lang={lang} title={`Flashback · 1·2·7·8 réalisation(s)`} activePage="flashback">
+<BaseLayout lang={lang} title={`Timeline · 1·2·7·8 réalisation(s)`} activePage="flashback">
 
 <div class="page-header">
-  <h1>Flashback</h1>
+  <h1>Timeline</h1>
   <p class="subtitle">{t.flashback.subtitle}</p>
 </div>
 
@@ -31,6 +71,41 @@ const t = ui[lang];
   ))}
 </div>
 
+<section class="apps-section">
+  <h2 class="apps-title">{t.flashback.appsTitle}</h2>
+  <div class="apps-row">
+    {standalone.map(app => (
+      <div class="app">
+        <a href={app.ios} target="_blank" rel="noopener" class="app-link" aria-label={app.name}>
+          <img src={app.icon} alt={app.name} loading="lazy" />
+        </a>
+        <span class="app-name">{app.name}</span>
+        <div class="app-stores">
+          <a href={app.ios} target="_blank" rel="noopener">iOS</a>
+          {app.android && <a href={app.android} target="_blank" rel="noopener">Android</a>}
+        </div>
+      </div>
+    ))}
+    <div class="apps-package">
+      <span class="package-tag">{t.flashback.appsPack}</span>
+      <div class="apps-package-grid">
+        {gthPack.map(app => (
+          <div class="app">
+            <a href={app.ios} target="_blank" rel="noopener" class="app-link" aria-label={app.name}>
+              <img src={app.icon} alt={app.name} loading="lazy" />
+            </a>
+            <span class="app-name">{app.name}</span>
+            <div class="app-stores">
+              <a href={app.ios} target="_blank" rel="noopener">iOS</a>
+              {app.android && <a href={app.android} target="_blank" rel="noopener">Android</a>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
 </BaseLayout>
 
 <style is:global>
@@ -38,7 +113,7 @@ const t = ui[lang];
   .page-header h1 { font-size: 56px; font-weight: 700; font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; letter-spacing: .04em; }
   .subtitle { font-size: 13px; color: #7D8893; margin-top: 8px; letter-spacing: .08em; }
 
-  .timeline { flex: 1; position: relative; max-width: 900px; margin: 60px auto; padding: 0 24px 60px; width: 100%; }
+  .timeline { position: relative; max-width: 900px; margin: 60px auto; padding: 0 24px 60px; width: 100%; }
 
   .timeline::before {
     content: '';
@@ -79,6 +154,22 @@ const t = ui[lang];
     flex-shrink: 0;
   }
 
+  .apps-section { max-width: 1100px; margin: 40px auto 80px; padding: 40px 24px 24px; text-align: center; }
+  .apps-title { font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; font-size: 22px; letter-spacing: .04em; color: #1CC9FE; margin-bottom: 36px; font-weight: 700; }
+  .apps-row { display: flex; flex-wrap: wrap; gap: 36px; align-items: flex-start; justify-content: center; }
+  .app { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 92px; }
+  .app-link { display: block; transition: transform .2s; line-height: 0; }
+  .app-link:hover { transform: translateY(-3px); }
+  .app img { width: 80px; height: 80px; border-radius: 18px; display: block; box-shadow: 0 4px 14px rgba(0,0,0,0.4); }
+  .app-name { font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; font-size: 11px; color: #e8e8e0; letter-spacing: .04em; text-align: center; }
+  .app-stores { display: flex; gap: 5px; }
+  .app-stores a { font-size: 9px; color: #7D8893; text-decoration: none; border: 0.5px solid rgba(125, 136, 147, 0.4); padding: 2px 6px; border-radius: 3px; letter-spacing: .04em; transition: color .15s, border-color .15s; }
+  .app-stores a:hover { color: #1CC9FE; border-color: #1CC9FE; }
+
+  .apps-package { position: relative; padding: 24px 22px 18px; border: 0.5px dashed rgba(28, 201, 254, 0.28); border-radius: 14px; }
+  .package-tag { position: absolute; top: -9px; left: 50%; transform: translateX(-50%); background: #0a0a0a; padding: 0 10px; font-size: 9px; letter-spacing: .14em; color: #1CC9FE; text-transform: uppercase; font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; }
+  .apps-package-grid { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+
   @media (max-width: 640px) {
     .page-header { padding: 32px 16px 0; }
     .page-header h1 { font-size: 36px; }
@@ -89,5 +180,11 @@ const t = ui[lang];
     .entry.left, .entry.right { flex-direction: row; }
     .entry-content { width: calc(100% - 44px); margin-left: 44px !important; margin-right: 0 !important; text-align: left !important; }
     .dot { left: 16px; top: 20px; }
+
+    .apps-section { padding: 24px 12px; margin: 20px auto 40px; }
+    .apps-row { gap: 24px; }
+    .apps-package-grid { gap: 14px; }
+    .app { width: 72px; }
+    .app img { width: 64px; height: 64px; border-radius: 14px; }
   }
 </style>
