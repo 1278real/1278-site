@@ -15,7 +15,7 @@ export const ui = {
     flashback: {
       subtitle: '1·2·7·8 joue avec les pixels',
       appsTitle: 'Applications mobiles',
-      appsPack: 'Pack gth',
+      appsPack: 'Pack GTHP',
       timeline: [
         {
           annee: '2000',
@@ -67,7 +67,7 @@ export const ui = {
     flashback: {
       subtitle: '1·2·7·8 plays with pixels',
       appsTitle: 'Mobile apps',
-      appsPack: 'gth Pack',
+      appsPack: 'GTHP Pack',
       timeline: [
         {
           annee: '2000',
