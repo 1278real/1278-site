@@ -183,6 +183,17 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
   )}
   <div class="selection-flat-wrapper">
     <div class="grid selection-flat-grid"></div>
+    {clients && clients.length > 0 && (
+      <div class="global-clients global-clients-bottom">
+        <div class="sep-track sep-track-reverse">
+          {[...clients, ...clients].map((c) => (
+            c.logo
+              ? <img src={imageUrl(c.logo, 120)} alt={c.nom} title={c.nom} />
+              : <span>{c.nom}</span>
+          ))}
+        </div>
+      </div>
+    )}
   </div>
   {yearGroups.map(group => (
     <div class="year-block" data-annee={group.annee}>
@@ -603,8 +614,9 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
       if (wasSelection && !willBeSelection) { restoreFromSelectionFlat(); }
       wrapper.classList.toggle('mode-selection', willBeSelection);
       if (willBeSelection) {
-        var gcTrackNa = wrapper.querySelector('.global-clients .sep-track');
-        if (gcTrackNa) { gcTrackNa.style.animation = 'none'; gcTrackNa.getBoundingClientRect(); gcTrackNa.style.animation = ''; }
+        wrapper.querySelectorAll('.global-clients .sep-track').forEach(function(t) { t.style.animation = 'none'; });
+        wrapper.querySelector('.global-clients .sep-track') && wrapper.querySelector('.global-clients .sep-track').getBoundingClientRect();
+        wrapper.querySelectorAll('.global-clients .sep-track').forEach(function(t) { t.style.animation = ''; });
       }
       if (cat === '') { restoreServerLayout(); }
       else { applyPerYear(cat); }
@@ -659,8 +671,9 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
       }
       wrapper.classList.toggle('mode-selection', willBeSelection);
       if (willBeSelection) {
-        var gcTrack = wrapper.querySelector('.global-clients .sep-track');
-        if (gcTrack) { gcTrack.style.animation = 'none'; gcTrack.getBoundingClientRect(); gcTrack.style.animation = ''; }
+        wrapper.querySelectorAll('.global-clients .sep-track').forEach(function(t) { t.style.animation = 'none'; });
+        wrapper.querySelector('.global-clients .sep-track') && wrapper.querySelector('.global-clients .sep-track').getBoundingClientRect();
+        wrapper.querySelectorAll('.global-clients .sep-track').forEach(function(t) { t.style.animation = ''; });
       }
       if (cat === '') { restoreServerLayout(); } else { applyPerYear(cat); }
       allProjects.forEach(function(el) { el.style.transition = ''; });
@@ -835,6 +848,10 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
   .sep-track span { margin-right: 28px; }
   .sep-track img:hover { opacity: 0.9; }
   @keyframes scroll-clients { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes scroll-clients-reverse { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+  .sep-track-reverse { animation-name: scroll-clients-reverse; }
+  .global-clients-bottom { display: none; }
+  .portfolio-wrapper.mode-selection .global-clients-bottom { display: block; }
 
   @media (hover: none) {
     .item .overlay { background: linear-gradient(to top, rgba(0,0,0,0.78) 0%, transparent 65%); }
