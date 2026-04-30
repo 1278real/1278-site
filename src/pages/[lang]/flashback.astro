@@ -102,6 +102,7 @@ const gthPack: App[] = [
             <span class="app-name">{app.name}</span>
             <div class="app-stores">
               <a href={app.ios} target="_blank" rel="noopener">iOS</a>
+              {app.macos && <a href={app.macos} target="_blank" rel="noopener">macOS</a>}
               {app.android && <a href={app.android} target="_blank" rel="noopener">Android</a>}
             </div>
           </div>
