@@ -830,7 +830,7 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
   .span-2 { grid-column: span 2; }
   .span-1 { grid-column: span 1; }
   .item img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
-  .item video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .4s; pointer-events: none; }
+  .item video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .4s; pointer-events: none; display: block; }
   .item .overlay { position: absolute; inset: 0; background: rgba(0,0,0,0); transition: background .2s; display: flex; flex-direction: column; justify-content: flex-end; padding: 10px; }
   .item:hover .overlay { background: rgba(0,0,0,0.65); }
   .item .info { opacity: 0; transform: translateY(4px); transition: all .15s; }
