@@ -773,11 +773,14 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
     var observer = new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
         var video = entry.target;
+        var img = video.closest('.item').querySelector('img');
         if (entry.isIntersecting) {
           video.play().catch(function() {});
           video.style.opacity = '1';
+          if (img) img.style.opacity = '0';
         } else {
           video.style.opacity = '0';
+          if (img) img.style.opacity = '1';
           video.pause();
           video.currentTime = 0;
         }
@@ -788,14 +791,17 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
   } else {
     videos.forEach(function(video) {
       var item = video.closest('.item');
+      var img = item.querySelector('img');
       var leaveTimer = null;
       item.addEventListener('mouseenter', function() {
         if (leaveTimer) { clearTimeout(leaveTimer); leaveTimer = null; }
         video.play().catch(function() {});
         video.style.opacity = '1';
+        if (img) img.style.opacity = '0';
       });
       item.addEventListener('mouseleave', function() {
         video.style.opacity = '0';
+        if (img) img.style.opacity = '1';
         leaveTimer = setTimeout(function() {
           leaveTimer = null;
           video.pause();
