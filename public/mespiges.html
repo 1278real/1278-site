@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mes Piges · Application iOS &amp; Android · 1·2·7·8 réalisation(s)</title>
+  <meta name="theme-color" content="#0a0a0a" />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0a0a0a; color: #e8e8e0; font-family: 'Barlow Condensed', sans-serif; min-height: 100vh; }
+    a { color: #1CC9FE; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; border-bottom: 0.5px solid rgba(255,255,255,0.07); }
+    .nav-logo { font-size: 18px; font-weight: 700; letter-spacing: .04em; color: #e8e8e0; }
+    .nav-logo span { color: #1CC9FE; }
+    .nav-back { font-size: 12px; letter-spacing: .1em; color: #7D8893; text-transform: uppercase; }
+    .nav-back:hover { color: #1CC9FE; text-decoration: none; }
+    main { max-width: 800px; margin: 0 auto; padding: 60px 32px 80px; }
+    .page-title { font-size: 11px; letter-spacing: .16em; color: #1CC9FE; text-transform: uppercase; margin-bottom: 12px; }
+    h1 { font-size: 42px; font-weight: 700; letter-spacing: .03em; line-height: 1.1; margin-bottom: 8px; }
+    .subtitle { font-size: 14px; color: #7D8893; margin-bottom: 32px; }
+    .badges { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 48px; }
+    .badge { display: inline-block; font-size: 11px; letter-spacing: .1em; color: #e8e8e0; border: 0.5px solid rgba(255,255,255,0.15); padding: 8px 18px; border-radius: 4px; text-transform: uppercase; transition: border-color .15s, color .15s; }
+    .badge:hover { border-color: #1CC9FE; color: #1CC9FE; text-decoration: none; }
+    .feature { padding: 28px 0; border-bottom: 0.5px solid rgba(255,255,255,0.07); }
+    .feature:first-of-type { border-top: 0.5px solid rgba(255,255,255,0.07); }
+    .feature h2 { font-size: 20px; font-weight: 700; letter-spacing: .04em; color: #e8e8e0; margin-bottom: 10px; }
+    .feature p { font-size: 15px; color: #7D8893; line-height: 1.7; }
+    .feature p em { color: #e8e8e0; font-style: normal; }
+    .note { margin-top: 40px; padding: 20px 24px; border: 0.5px solid rgba(28,201,254,0.2); border-radius: 8px; font-size: 13px; color: #7D8893; line-height: 1.6; }
+    .note strong { color: #1CC9FE; }
+    footer { text-align: center; padding: 24px 32px; font-size: 11px; color: #555; letter-spacing: .08em; border-top: 0.5px solid rgba(255,255,255,0.05); }
+    @media (max-width: 640px) {
+      nav { padding: 16px 20px; }
+      main { padding: 40px 20px 60px; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">1<span>·</span>2<span>·</span>7<span>·</span>8 réalisation(s)</a>
+  <a href="/" class="nav-back">← Retour</a>
+</nav>
+
+<main>
+  <div class="page-title">Application iOS &amp; Android</div>
+  <h1>Mes Piges</h1>
+  <p class="subtitle">Votre gestionnaire de piges — planning, salaires &amp; prélèvement à la source</p>
+
+  <div class="badges">
+    <a href="https://apps.apple.com/fr/app/mes-piges/id1435733840" target="_blank" rel="noopener" class="badge">App Store · iOS</a>
+    <a href="/mespiges-faq.html" class="badge">FAQ</a>
+  </div>
+
+  <div class="feature">
+    <h2>Vous avez différents employeurs chaque mois ?</h2>
+    <p>Saisissez les employeurs et les missions récurrentes que vous êtes amenés à effectuer chez chacun, puis sélectionnez jour par jour la mission : vous pourrez noter les heures supplémentaires effectuées et ainsi calculer un brut et un net approchant.</p>
+  </div>
+
+  <div class="feature">
+    <h2>Notez vos salaires reçus et vérifiez que personne ne vous a oubliés</h2>
+    <p>Employeur par employeur, visualisez le salaire net attendu et saisissez le net réel reçu. Notez le net imposable apparaissant sur le bulletin de salaire ainsi que le montant prélevé pour les impôts.</p>
+  </div>
+
+  <div class="feature">
+    <h2>Votre prélèvement à la source en temps réel</h2>
+    <p>Mes Piges calcule en temps réel le taux auquel vous devriez être imposés en fonction de votre situation de famille, de vos revenus, crédits d'impôts et acomptes, et vous indique où vous en êtes mois par mois : combien l'administration vous remboursera ou combien il faudra mettre de côté pour la régularisation.</p>
+  </div>
+
+  <div class="feature">
+    <h2>Mode démo / tutoriel intégré</h2>
+    <p>Un mode démo est intégré : il vous permet de faire une visite complète sans dévoiler vos informations personnelles — accessible depuis l'application ou directement depuis le menu principal de votre iPhone d'un simple appui prolongé sur l'icône.</p>
+  </div>
+
+  <div class="feature">
+    <h2>Réalisée en partenariat avec l'association UNDIA</h2>
+    <p><em>Union nationale de défense des intermittents de l'audiovisuel</em> — l'association a établi le tableur permettant les calculs en temps réel.</p>
+  </div>
+
+  <div class="note">
+    <strong>Confidentialité :</strong> les données sont intégralement stockées sur votre téléphone. Aucune information, de quelque nature que ce soit, ne transite vers un serveur externe. <a href="/rgpd.html">Politique de confidentialité complète →</a>
+  </div>
+</main>
+
+<footer>© 2025 1·2·7·8 réalisation(s) · SASU · RCS 488 234 329 00040 Nanterre</footer>
+
+</body>
+</html>

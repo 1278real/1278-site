@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UNDIApp · FAQ · 1·2·7·8 réalisation(s)</title>
+  <meta name="theme-color" content="#0a0a0a" />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0a0a0a; color: #e8e8e0; font-family: 'Barlow Condensed', sans-serif; min-height: 100vh; }
+    a { color: #1CC9FE; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; border-bottom: 0.5px solid rgba(255,255,255,0.07); }
+    .nav-logo { font-size: 18px; font-weight: 700; letter-spacing: .04em; color: #e8e8e0; }
+    .nav-logo span { color: #1CC9FE; }
+    .nav-back { font-size: 12px; letter-spacing: .1em; color: #7D8893; text-transform: uppercase; }
+    .nav-back:hover { color: #1CC9FE; text-decoration: none; }
+    main { max-width: 800px; margin: 0 auto; padding: 60px 32px 80px; }
+    .page-title { font-size: 11px; letter-spacing: .16em; color: #1CC9FE; text-transform: uppercase; margin-bottom: 12px; }
+    h1 { font-size: 42px; font-weight: 700; letter-spacing: .03em; line-height: 1.1; margin-bottom: 8px; }
+    .subtitle { font-size: 14px; color: #7D8893; margin-bottom: 48px; }
+    .faq-item { padding: 20px 0; border-bottom: 0.5px solid rgba(255,255,255,0.06); }
+    .faq-item:first-of-type { border-top: 0.5px solid rgba(255,255,255,0.06); }
+    .faq-q { font-size: 17px; font-weight: 700; letter-spacing: .03em; color: #e8e8e0; cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .faq-q::after { content: '+'; color: #1CC9FE; font-size: 20px; line-height: 1; flex-shrink: 0; transition: transform .2s; }
+    .faq-item.open .faq-q::after { transform: rotate(45deg); }
+    .faq-a { display: none; font-size: 14px; color: #7D8893; line-height: 1.7; margin-top: 14px; }
+    .faq-a em { color: #e8e8e0; font-style: normal; }
+    .faq-item.open .faq-a { display: block; }
+    .note { margin-top: 40px; padding: 20px 24px; border: 0.5px solid rgba(28,201,254,0.2); border-radius: 8px; font-size: 13px; color: #7D8893; line-height: 1.6; }
+    .note strong { color: #1CC9FE; }
+    footer { text-align: center; padding: 24px 32px; font-size: 11px; color: #555; letter-spacing: .08em; border-top: 0.5px solid rgba(255,255,255,0.05); margin-top: 40px; }
+    @media (max-width: 640px) {
+      nav { padding: 16px 20px; }
+      main { padding: 40px 20px 60px; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">1<span>·</span>2<span>·</span>7<span>·</span>8 réalisation(s)</a>
+  <a href="https://www.undia.fr/" target="_blank" rel="noopener" class="nav-back">UNDIA →</a>
+</nav>
+
+<main>
+  <div class="page-title">Application iOS &amp; Android</div>
+  <h1>UNDIApp · FAQ</h1>
+  <p class="subtitle">Foire aux questions — <a href="mailto:contact+apps@1-2-7-8.tv">contact+apps@1-2-7-8.tv</a></p>
+
+  <div class="faq-item">
+    <div class="faq-q">Télécharger l'application</div>
+    <div class="faq-a">
+      Vous pouvez retrouver l'application UNDIApp sur l'App Store Apple : <a href="https://apps.apple.com/fr/app/undiapp-v4/id1577959494" target="_blank" rel="noopener">UNDIApp v4 sur l'App Store</a>.<br><br>
+      Également disponible sur <a href="https://play.google.com/store/apps/details?id=com.by1278real.undiapp" target="_blank" rel="noopener">Google Play</a>.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Connexion à mon dossier — identifiant &amp; mot de passe</div>
+    <div class="faq-a">
+      Il n'y a actuellement aucun identifiant ou mot de passe à saisir manuellement. L'application utilise un accès "temporaire" qui remplit automatiquement les champs d'authentification pour permettre l'accès à votre dossier. Une connexion internet est nécessaire au moment de la validation.<br><br>
+      <em>UNDIA fournira dans le futur des identifiants personnels à ses adhérents.</em>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">L'application n'affiche plus les mêmes sommes que Pôle Emploi</div>
+    <div class="faq-a">
+      Si la différence est récente, il est probable que cela soit en rapport avec le prélèvement à la source.<br><br>
+      Vérifiez d'abord que vous avez bien renseigné votre taux tel que communiqué à Pôle Emploi par l'administration fiscale.<br><br>
+      Si c'est le cas, contactez <a href="mailto:undiapp@undia.fr">undiapp@undia.fr</a> pour diagnostiquer le problème.<br><br>
+      <em>Note : les modifications de taux demandées à votre initiative en dehors des mises à jour automatiques ne sont pas gérées par l'application.</em>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>RGPD &amp; confidentialité :</strong> L'association <a href="https://www.undia.fr/" target="_blank" rel="noopener">UNDIA</a> a regroupé toutes les informations concernant sa conformité RGPD dans ce document : <a href="https://www.undia.fr/version1/pdf/declaration_rgpd.pdf" target="_blank" rel="noopener">UNDIA et vos données →</a>
+  </div>
+</main>
+
+<footer>© 2025 1·2·7·8 réalisation(s) · SASU · RCS 488 234 329 00040 Nanterre</footer>
+
+<script>
+  document.querySelectorAll('.faq-q').forEach(function(q) {
+    q.addEventListener('click', function() {
+      var item = q.closest('.faq-item');
+      var wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(function(el) { el.classList.remove('open'); });
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+</script>
+
+</body>
+</html>

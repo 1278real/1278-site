@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mes Piges · FAQ · 1·2·7·8 réalisation(s)</title>
+  <meta name="theme-color" content="#0a0a0a" />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0a0a0a; color: #e8e8e0; font-family: 'Barlow Condensed', sans-serif; min-height: 100vh; }
+    a { color: #1CC9FE; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; border-bottom: 0.5px solid rgba(255,255,255,0.07); }
+    .nav-logo { font-size: 18px; font-weight: 700; letter-spacing: .04em; color: #e8e8e0; }
+    .nav-logo span { color: #1CC9FE; }
+    .nav-back { font-size: 12px; letter-spacing: .1em; color: #7D8893; text-transform: uppercase; }
+    .nav-back:hover { color: #1CC9FE; text-decoration: none; }
+    main { max-width: 800px; margin: 0 auto; padding: 60px 32px 80px; }
+    .page-title { font-size: 11px; letter-spacing: .16em; color: #1CC9FE; text-transform: uppercase; margin-bottom: 12px; }
+    h1 { font-size: 42px; font-weight: 700; letter-spacing: .03em; line-height: 1.1; margin-bottom: 8px; }
+    .subtitle { font-size: 14px; color: #7D8893; margin-bottom: 48px; }
+    .section-label { font-size: 10px; letter-spacing: .18em; color: #1CC9FE; text-transform: uppercase; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 0.5px solid rgba(28,201,254,0.2); }
+    .faq-item { padding: 20px 0; border-bottom: 0.5px solid rgba(255,255,255,0.06); }
+    .faq-q { font-size: 17px; font-weight: 700; letter-spacing: .03em; color: #e8e8e0; cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .faq-q::after { content: '+'; color: #1CC9FE; font-size: 20px; line-height: 1; flex-shrink: 0; transition: transform .2s; }
+    .faq-item.open .faq-q::after { transform: rotate(45deg); }
+    .faq-a { display: none; font-size: 14px; color: #7D8893; line-height: 1.7; margin-top: 14px; }
+    .faq-a em { color: #e8e8e0; font-style: normal; }
+    .faq-item.open .faq-a { display: block; }
+    footer { text-align: center; padding: 24px 32px; font-size: 11px; color: #555; letter-spacing: .08em; border-top: 0.5px solid rgba(255,255,255,0.05); margin-top: 40px; }
+    @media (max-width: 640px) {
+      nav { padding: 16px 20px; }
+      main { padding: 40px 20px 60px; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">1<span>·</span>2<span>·</span>7<span>·</span>8 réalisation(s)</a>
+  <a href="/mespiges.html" class="nav-back">← Mes Piges</a>
+</nav>
+
+<main>
+  <div class="page-title">Application iOS &amp; Android</div>
+  <h1>Mes Piges · FAQ</h1>
+  <p class="subtitle">Foire aux questions — <a href="mailto:contact+apps@1-2-7-8.tv">contact+apps@1-2-7-8.tv</a></p>
+
+  <div class="section-label">Premiers pas</div>
+
+  <div class="faq-item">
+    <div class="faq-q">Télécharger l'application</div>
+    <div class="faq-a">
+      Vous pouvez retrouver l'application Mes Piges sur l'App Store Apple en suivant <a href="https://apps.apple.com/fr/app/mes-piges/id1435733840" target="_blank" rel="noopener">ce lien</a>.<br><br>
+      <em>Big up à Jérémie S. pour toutes ses heures à faire et refaire les calculs pour UNDIApp puis Mes Piges &amp; UNDIA.la.Source !!</em>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Connexion à votre iCloud Drive</div>
+    <div class="faq-a">
+      Pour fonctionner, Mes Piges aura besoin d'être autorisé à se connecter à votre iCloud Drive pour y stocker vos données de manière sécurisée et pouvoir y accéder ensuite depuis tous vos appareils connectés avec votre compte iCloud.<br><br>
+      Si vous ne savez pas où retrouver ces paramétrages, consultez la section "Résolution de problèmes" ci-dessous.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Premiers éléments à saisir pour initialiser l'application</div>
+    <div class="faq-a">
+      Nous avons simplifié au maximum : nous n'avons besoin de connaître que votre <em>salaire brut le plus courant</em> afin d'initialiser par la suite les missions que vous allez renseigner avec ce salaire de référence.<br><br>
+      Vous pourrez reprendre spécifiquement chaque salaire dans les paramétrages, employeur par employeur, mission par mission, pour coller au plus près à votre situation réelle.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Vous voilà dans l'application</div>
+    <div class="faq-a">
+      Vous disposez de 5 onglets :<br><br>
+      <em>Réglages</em> : affinez les paramétrages de vos missions et employeurs, saisissez les informations pour le calcul de l'impôt (situation familiale, revenus fonciers, crédit d'impôts) ainsi que les informations Pôle Emploi si vous êtes intermittent.<br><br>
+      Vous pouvez naviguer dans les mois en glissant vers la gauche ou la droite le graphique. En tapotant plusieurs fois sur les barres, vous affichez successivement brut, net calculé, net versé et prélèvement à la source effectif.
+    </div>
+  </div>
+
+  <div class="section-label">Impôts &amp; prélèvement à la source</div>
+
+  <div class="faq-item">
+    <div class="faq-q">Pourquoi ne dois-je pas renseigner mon taux de prélèvement à la source ?</div>
+    <div class="faq-a">
+      Le taux communiqué par les impôts s'appuie sur l'année N-2 (puis N-1 après votre déclaration annuelle). Si vous avez des revenus irréguliers, ce taux ne reflète qu'imparfaitement votre situation réelle.<br><br>
+      La mission de <em>Mes Piges</em> est justement de minimiser les mauvaises surprises en calculant au jour le jour le taux réel de votre imposition en fonction de vos revenus de l'année en cours.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Qu'est-ce que le crédit d'impôts ?</div>
+    <div class="faq-a">
+      Le crédit d'impôts est attribué de manière différée pour des dépenses effectuées l'année fiscale précédente (développement durable, emploi à domicile, garde d'enfants, etc.).<br><br>
+      Ce crédit d'impôts annuel est "transparent" au niveau du taux d'imposition : il ne faut pas saisir les virements reçus dans la case "Crédit d'impôts du mois" — ce sont uniquement des crédits ponctuels supplémentaires qui sont à renseigner mois par mois.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Comment saisir les montants Pôle Emploi, Congés Spectacles et autres ?</div>
+    <div class="faq-a">
+      Dans les paramètres nécessaires aux calculs pour les personnes concernées par Pôle Emploi, il y a 3 valeurs à saisir par période de droits :<br><br>
+      • L'<em>allocation journalière nette</em> (AJ nette) — notifiée avec votre avis d'admission en première page.<br>
+      • L'<em>allocation journalière brute</em> (AJ brute) et le <em>salaire journalier de référence</em> — inscrits sur la notification de la 2ème page.
+    </div>
+  </div>
+
+  <div class="section-label">Résolution de problèmes</div>
+
+  <div class="faq-item">
+    <div class="faq-q">Problèmes de connexion iCloud</div>
+    <div class="faq-a">
+      Vos données sont stockées sur iCloud sécurisé par Apple. Au lancement de l'application (et après un temps de veille), l'ensemble des données est téléchargé depuis iCloud.<br><br>
+      Si la connexion échoue, vérifiez dans Réglages iOS → votre nom → iCloud que Mes Piges est bien autorisé à utiliser iCloud Drive.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Des montants fantaisistes ? Une mention "nan" quelque part ?</div>
+    <div class="faq-a">
+      Certains paramétrages initiaux peuvent créer des instabilités dans les calculs. Si vous voyez apparaître une mention Nan ou nan,00, merci de nous contacter : <a href="mailto:contact+apps@1-2-7-8.tv">contact+apps@1-2-7-8.tv</a>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Tout réinitialiser ?</div>
+    <div class="faq-a">
+      Il est possible de tout réinitialiser (employeurs, missions, piges, données annexes) en saisissant un mauvais mot de passe au départ et en choisissant ensuite "réinitialiser mon mot de passe".
+    </div>
+  </div>
+
+  <div class="section-label">Fonctionnalités avancées</div>
+
+  <div class="faq-item">
+    <div class="faq-q">Refonte de l'écran calendrier</div>
+    <div class="faq-a">
+      Une zone sur laquelle promener son doigt pour régler les heures de début et de fin de la pige, et voir apparaître d'autres piges du même jour le cas échéant. Une série de boutons pour rapidement régler les heures standard selon vos habitudes.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Synchronisation avec le Calendrier iOS</div>
+    <div class="faq-a">
+      Vous pouvez générer un calendrier automatiquement à partir de Mes Piges qui restera synchronisé (ajout, suppression, modification d'événements) et que vous pourrez partager.<br><br>
+      La durée des événements créés est égale à la somme des heures déclarées.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Le mode démo en accès direct</div>
+    <div class="faq-a">
+      Depuis la page d'accueil de votre iPhone, un appui long sur l'icône fait surgir le menu contextuel permettant de lancer directement le mode démo — pour montrer l'application à vos collègues sans dévoiler vos données personnelles.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Utilisation sur iPad</div>
+    <div class="faq-a">
+      Toutes les données sont synchronisées au démarrage : vous pouvez passer de l'iPad à l'iPhone au fil des jours. Bénéficiez également du mode Split View pour saisir vos piges.
+    </div>
+  </div>
+
+  <div class="section-label">Historique des versions</div>
+
+  <div class="faq-item">
+    <div class="faq-q">Version 1.1 (build 3160)</div>
+    <div class="faq-a">
+      • Correction autour du prélèvement à la source, qui permet désormais un prélèvement nul<br>
+      • Refonte de l'écran de saisie d'une pige dans le calendrier
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Version 1.06 (build 2911)</div>
+    <div class="faq-a">
+      • Séparation des impôts sur les 2 déclarants modifiée pour se conformer au mode de calcul officiel<br>
+      • Taux d'imposition instantané modifié pour se conformer au mode de calcul officiel<br>
+      • Correction d'un rafraichissement parfois inopérant sur les saisies impôts
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Version 1.05 (build 2889)</div>
+    <div class="faq-a">
+      • Page Impôts plus claire et détaillée<br>
+      • Gestion des pensions alimentaires reçues et versées<br>
+      • Salaires par ordre chronologique de paiement<br>
+      • Corrections de calculs
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Version 1.04 (build 2655)</div>
+    <div class="faq-a">
+      • Synchronisation avec le calendrier iOS effective<br>
+      • Parcours de départ amélioré<br>
+      • Modifications sur le graphique statistiques sur 12 mois
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Version 1.0 — Sortie le 29 janvier 2019</div>
+    <div class="faq-a">
+      Première version publique de Mes Piges.
+    </div>
+  </div>
+
+</main>
+
+<footer>© 2025 1·2·7·8 réalisation(s) · SASU · RCS 488 234 329 00040 Nanterre</footer>
+
+<script>
+  document.querySelectorAll('.faq-q').forEach(function(q) {
+    q.addEventListener('click', function() {
+      var item = q.closest('.faq-item');
+      var wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(function(el) { el.classList.remove('open'); });
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+</script>
+
+</body>
+</html>
