@@ -1,14 +1,42 @@
 ---
-// meta refresh évite le flash "Redirecting from / to /fr/"
+// 1s de temporisation + logo filigrane avant bascule vers /fr/
 ---
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="0;url=/fr/" />
+  <meta http-equiv="refresh" content="1;url=/fr/" />
   <link rel="canonical" href="/fr/" />
   <title>1·2·7·8 réalisation(s)</title>
-  <style>body{background:#0a0a0a;}</style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      background: #0a0a0a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(32px, 8vw, 72px);
+      font-weight: 700;
+      letter-spacing: .04em;
+      color: rgba(232, 232, 224, 0.08);
+      user-select: none;
+      animation: fade-in 0.6s ease forwards;
+    }
+    .logo span { color: rgba(28, 201, 254, 0.12); }
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
-<body></body>
+<body>
+  <div class="logo">1<span>·</span>2<span>·</span>7<span>·</span>8 réalisation(s)</div>
+</body>
 </html>
