@@ -43,10 +43,12 @@ const youtubeId = getYoutubeId(projet.url_youtube);
   <a href={`${base}${lang}/`} class="back">{t.projet.back}</a>
   <div class="projet-info">
     <h1>{titre}</h1>
+    {projet.production && (
+      <div class="production-line">{projet.production}</div>
+    )}
     <div class="meta-line">
       {projet.annee && <span>{projet.annee}</span>}
       {projet.diffusion && <><span class="sep">·</span><span>{projet.diffusion}</span></>}
-      {projet.production && <><span class="sep">·</span><span>{projet.production}</span></>}
     </div>
     {projet.categories && projet.categories.length > 0 && (
       <div class="badges">
@@ -68,7 +70,10 @@ const youtubeId = getYoutubeId(projet.url_youtube);
 )}
 
 {description && (
-  <div class="description" set:html={description} />
+  <div class="description">
+    {projet.production && <p class="prod-prefix">Prod : <strong>{projet.production}</strong></p>}
+    <div set:html={description} />
+  </div>
 )}
 
 {(youtubeId || (projet.images && projet.images.length > 0)) && (
@@ -101,7 +106,10 @@ const youtubeId = getYoutubeId(projet.url_youtube);
   .back:hover { color: #1CC9FE; }
 
   h1 { font-size: 42px; font-weight: 700; letter-spacing: .02em; line-height: 1; font-family: 'stenciletta-solid', 'Barlow Condensed', sans-serif; }
-  .meta-line { font-size: 12px; color: #7D8893; margin-top: 10px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .production-line { font-size: 13px; color: #1CC9FE; letter-spacing: .08em; margin-top: 8px; font-weight: 700; text-transform: uppercase; }
+  .prod-prefix { font-size: 13px; color: #7D8893; letter-spacing: .06em; margin-bottom: 12px; }
+  .prod-prefix strong { color: #1CC9FE; font-weight: 700; }
+  .meta-line { font-size: 12px; color: #7D8893; margin-top: 6px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
   .meta-line .sep { color: #1CC9FE; }
   .badges { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
   .badge { font-size: 10px; padding: 4px 10px; border: 1px solid; letter-spacing: .08em; }
