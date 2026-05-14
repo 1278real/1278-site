@@ -776,8 +776,11 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
         var img = video.closest('.item').querySelector('img');
         if (entry.isIntersecting) {
           video.play().catch(function() {});
-          video.style.opacity = '1';
-          if (img) img.style.opacity = '0';
+          video.addEventListener('playing', function onPlaying() {
+            video.style.opacity = '1';
+            if (img) img.style.opacity = '0';
+            video.removeEventListener('playing', onPlaying);
+          });
         } else {
           video.style.opacity = '0';
           if (img) img.style.opacity = '1';
@@ -796,8 +799,11 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
       item.addEventListener('mouseenter', function() {
         if (leaveTimer) { clearTimeout(leaveTimer); leaveTimer = null; }
         video.play().catch(function() {});
-        video.style.opacity = '1';
-        if (img) img.style.opacity = '0';
+        video.addEventListener('playing', function onPlaying() {
+          video.style.opacity = '1';
+          if (img) img.style.opacity = '0';
+          video.removeEventListener('playing', onPlaying);
+        });
       });
       item.addEventListener('mouseleave', function() {
         video.style.opacity = '0';
