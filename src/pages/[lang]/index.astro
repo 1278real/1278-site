@@ -181,7 +181,7 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
       <div class="sep-track" style={`animation-duration: ${tickerDurationS}s`}>
         {tickerArr.map((c) => (
           c.logo
-            ? <img src={imageUrl(c.logo, 120)} alt={c.nom} title={c.nom} />
+            ? <img src={imageUrl(c.logo, 120)} alt={c.nom} title={c.nom} loading="lazy" decoding="async" />
             : <span>{c.nom}</span>
         ))}
       </div>
@@ -194,7 +194,7 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
         <div class="sep-track sep-track-reverse" style={`animation-duration: ${tickerDurationS}s`}>
           {tickerArr.map((c) => (
             c.logo
-              ? <img src={imageUrl(c.logo, 120)} alt={c.nom} title={c.nom} />
+              ? <img src={imageUrl(c.logo, 120)} alt={c.nom} title={c.nom} loading="lazy" decoding="async" />
               : <span>{c.nom}</span>
           ))}
         </div>
@@ -213,7 +213,7 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
             <div class="sep-track" style={`animation-duration: ${tickerDurationS}s`}>
               {tickerArr.map((c) => (
                 c.logo
-                  ? <img src={imageUrl(c.logo, 120)} alt={c.nom} title={c.nom} />
+                  ? <img src={imageUrl(c.logo, 120)} alt={c.nom} title={c.nom} loading="lazy" decoding="async" />
                   : <span>{c.nom}</span>
               ))}
             </div>
@@ -232,12 +232,18 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
             style={item._heroRow2 ? 'grid-row: span 2' : undefined}
           >
             {item.image_vignette && (
-              <img src={imageUrl(item.image_vignette.id, 800)} alt={lang === 'en' && item.titre_en ? item.titre_en : item.titre} loading="lazy" />
+              <img src={imageUrl(item.image_vignette.id, 800)} alt={lang === 'en' && item.titre_en ? item.titre_en : item.titre} loading="lazy" decoding="async" />
             )}
             {item.video_vignette && (
-              <video muted loop playsinline preload="none">
-                <source src={`https://api-gthp.1-2-7-8.solutions/assets/${item.video_vignette}`} type="video/mp4" />
-              </video>
+              <video
+                muted
+                loop
+                playsinline
+                preload="none"
+                disableRemotePlayback
+                poster={item.image_vignette ? imageUrl(item.image_vignette.id, 800) : undefined}
+                data-src={`https://api-gthp.1-2-7-8.solutions/assets/${item.video_vignette}`}
+              ></video>
             )}
             <div class="overlay">
               <div class="info">
@@ -767,56 +773,87 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
 
 (function() {
   var isTouch = window.matchMedia('(hover: none)').matches;
-  var videos = document.querySelectorAll('.item video');
+  var videos = Array.prototype.slice.call(document.querySelectorAll('.item video'));
+  if (!videos.length) return;
+
+  // iOS limite le nombre de decodeurs video simultanes : au-dela, play() echoue
+  // silencieusement et la vignette reste noire. On plafonne les lectures concurrentes.
+  var MAX_CONCURRENT = isTouch ? 2 : 4;
+  var playing = [];
+
+  function attachSource(video) {
+    if (video.dataset.loaded) return;
+    video.dataset.loaded = '1';
+    video.src = video.dataset.src;
+    video.load();
+  }
+
+  function reveal(video) {
+    video.style.opacity = '1';
+  }
+
+  function hide(video) {
+    video.style.opacity = '0';
+  }
+
+  function stop(video) {
+    var i = playing.indexOf(video);
+    if (i !== -1) playing.splice(i, 1);
+    hide(video);
+    video.pause();
+    try { video.currentTime = 0; } catch (e) {}
+  }
+
+  function start(video) {
+    if (playing.indexOf(video) !== -1) return;
+    while (playing.length >= MAX_CONCURRENT) stop(playing[0]);
+    playing.push(video);
+
+    attachSource(video);
+
+    // Le listener doit etre pose AVANT play() : si iOS refuse la lecture,
+    // l'evenement n'arrive jamais et on ne doit surtout pas devoiler un element vide.
+    var onPlaying = function () {
+      video.removeEventListener('playing', onPlaying);
+      if (playing.indexOf(video) !== -1 && video.readyState >= 2) reveal(video);
+    };
+    video.addEventListener('playing', onPlaying);
+
+    var p = video.play();
+    if (p && p.catch) p.catch(function () { stop(video); });
+  }
 
   if (isTouch) {
-    var observer = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        var video = entry.target;
-        var img = video.closest('.item').querySelector('img');
-        if (entry.isIntersecting) {
-          video.play().catch(function() {});
-          video.addEventListener('playing', function onPlaying() {
-            video.style.opacity = '1';
-            if (img) img.style.opacity = '0';
-            video.removeEventListener('playing', onPlaying);
-          });
-        } else {
-          video.style.opacity = '0';
-          if (img) img.style.opacity = '1';
-          video.pause();
-          video.currentTime = 0;
-        }
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) start(entry.target);
+        else stop(entry.target);
       });
-    }, { threshold: 0.4 });
+    }, { threshold: 0.6 });
 
-    videos.forEach(function(video) { observer.observe(video); });
+    videos.forEach(function (video) { observer.observe(video); });
   } else {
-    videos.forEach(function(video) {
+    // Sur desktop, on precharge la source au survol imminent pour eviter le trou noir.
+    videos.forEach(function (video) {
       var item = video.closest('.item');
-      var img = item.querySelector('img');
       var leaveTimer = null;
-      item.addEventListener('mouseenter', function() {
+
+      item.addEventListener('mouseenter', function () {
         if (leaveTimer) { clearTimeout(leaveTimer); leaveTimer = null; }
-        video.play().catch(function() {});
-        video.addEventListener('playing', function onPlaying() {
-          video.style.opacity = '1';
-          if (img) img.style.opacity = '0';
-          video.removeEventListener('playing', onPlaying);
-        });
+        start(video);
       });
-      item.addEventListener('mouseleave', function() {
-        video.style.opacity = '0';
-        if (img) img.style.opacity = '1';
-        leaveTimer = setTimeout(function() {
+
+      item.addEventListener('mouseleave', function () {
+        hide(video);
+        leaveTimer = setTimeout(function () {
           leaveTimer = null;
-          video.pause();
-          video.currentTime = 0;
+          stop(video);
         }, 400);
       });
     });
   }
 })();
+
 </script>
 
 </BaseLayout>
@@ -842,7 +879,7 @@ const otherCats = categories.filter(c => c.slug !== 'selection').sort((a, b) => 
   .span-2 { grid-column: span 2; }
   .span-1 { grid-column: span 1; }
   .item img { position: absolute; inset: -1px; width: calc(100% + 2px); height: calc(100% + 2px); object-fit: cover; display: block; }
-  .item video { position: absolute; inset: -1px; width: calc(100% + 2px); height: calc(100% + 2px); object-fit: cover; opacity: 0; transition: opacity .4s; pointer-events: none; display: block; }
+  .item video { position: absolute; inset: -1px; width: calc(100% + 2px); height: calc(100% + 2px); object-fit: cover; opacity: 0; transition: opacity .4s; pointer-events: none; display: block; background: transparent; }
   .item .overlay { position: absolute; inset: 0; background: rgba(0,0,0,0); transition: background .2s; display: flex; flex-direction: column; justify-content: flex-end; padding: 10px; }
   .item:hover .overlay { background: rgba(0,0,0,0.65); }
   .item .info { opacity: 0; transform: translateY(4px); transition: all .15s; }
